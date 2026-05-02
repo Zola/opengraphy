@@ -1,0 +1,13 @@
+.git
+.DS_Store
+.env
+_reference
+index.html
+index.png
+panel.htm
+panel.png
+*.db
+*.db-shm
+*.db-wal
+dist
+tmp

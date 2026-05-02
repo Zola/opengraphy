@@ -1,0 +1,30 @@
+{{define "work-card"}}
+<article class="work-card" data-id="{{.ID}}">
+  <img src="{{.Image}}" alt="">
+  <div><small>{{.Domain}}</small><h3>{{.Title}}</h3><p>{{.Description}}</p><span>{{.Rating}} pts</span></div>
+</article>
+{{end}}
+
+{{define "leader-row"}}
+<article class="leader-row">
+  <img src="{{.Image}}" alt="">
+  <div><h3>{{.Title}}</h3><small>{{.Domain}}</small></div>
+  <strong>{{.Rating}}</strong>
+</article>
+{{end}}
+
+{{define "footer"}}
+<footer class="site-footer">
+  <div><b>{{.T "brand"}}</b><p>Secure Open Graph diagnostics and social preview testing.</p></div>
+  <form data-lang-form><label>Language <select name="lang">{{range .Locales}}<option value="{{.}}" {{if eq $.Locale .}}selected{{end}}>{{.}}</option>{{end}}</select></label></form>
+  <nav><a href="/privacy">{{.T "privacy"}}</a><a href="/terms">{{.T "terms"}}</a><a href="https://developers.facebook.com/tools/debug/" rel="noopener" target="_blank">Facebook Debugger</a><a href="https://www.linkedin.com/post-inspector/" rel="noopener" target="_blank">LinkedIn Inspector</a></nav>
+</footer>
+{{end}}
+
+{{define "consent"}}
+<div class="consent" data-consent hidden>
+  <p>{{.T "consent"}}</p>
+  <button data-consent-accept>{{.T "accept"}}</button>
+  <button data-consent-reject>{{.T "reject"}}</button>
+</div>
+{{end}}

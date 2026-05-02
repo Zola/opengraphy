@@ -1,0 +1,22 @@
+.DS_Store
+*.log
+*.tmp
+
+# Local environment and runtime data
+.env
+/data/
+*.db
+*.db-shm
+*.db-wal
+
+# Research/reference captures, not product source
+/_reference/
+/index.html
+/index.png
+/panel.htm
+/panel.png
+
+# Build output
+/opengraphy
+/dist/
+/tmp/

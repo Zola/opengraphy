@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="{{.Locale}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{.Title}}</title>
+  <meta name="description" content="OpenGraphy checks Open Graph and Twitter Card metadata with social previews, diagnostics, and repair suggestions.">
+  <link rel="stylesheet" href="/static/css/app.css">
+  <script defer src="/static/js/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/"><span class="brand-mark"></span>{{.T "brand"}}</a>
+    <nav><a href="/">{{.T "home"}}</a><a href="/gallery">{{.T "gallery"}}</a><a href="/privacy">{{.T "privacy"}}</a></nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Open Graph / Twitter Card / Social Preview</p>
+        <h1>{{.T "hero_title"}}</h1>
+        <p class="lead">{{.T "hero_subtitle"}}</p>
+        <form class="check-form" action="/check" method="post">
+          <input name="url" type="url" required placeholder="{{.T "url_placeholder"}}">
+          <button type="submit">{{.T "check"}}</button>
+        </form>
+        <div class="stats-row" data-stats>
+          <span><strong data-online>{{.Stats.Online}}</strong> {{.T "stats_online"}}</span>
+          <span><strong data-visits>{{.Stats.VisitsTotal}}</strong> {{.T "stats_visits"}}</span>
+          <span><strong data-checks>{{.Stats.ChecksTotal}}</strong> {{.T "stats_checks"}}</span>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <div class="browser-card">
+          <div class="browser-bar"><span></span><span></span><span></span></div>
+          <div class="mock-preview">
+            <div class="mock-image"></div>
+            <div><strong>acme.example</strong><h3>Launch-ready website previews</h3><p>Metadata that looks intentional wherever customers share your link.</p></div>
+          </div>
+          <div class="mini-report"><b>92</b><span>Preview score</span><em>7 checks passed</em></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <h2>Built for the places links actually travel</h2>
+      <div class="platform-grid">
+        <article>Facebook</article><article>X / Twitter</article><article>LinkedIn</article><article>Slack</article>
+        <article>Discord</article><article>WhatsApp</article><article>Telegram</article><article>Pinterest</article>
+      </div>
+    </section>
+
+    <section class="split-section">
+      <div>
+        <h2>Secure fetching, accurate parsing, useful fixes</h2>
+        <p>OpenGraphy fetches pages from the server, blocks private networks, parses the initial HTML source, checks image reachability, and turns findings into clear repair suggestions.</p>
+      </div>
+      <div class="feature-list">
+        <p><b>SSRF protection</b><span>DNS and redirect validation for every request.</span></p>
+        <p><b>4-hour cache</b><span>Redis metadata cache with no long-term URL history.</span></p>
+        <p><b>Diagnostics</b><span>Missing tags, image issues, length checks, and generated snippets.</span></p>
+      </div>
+    </section>
+
+    <section class="gallery-teaser">
+      <div class="section-head"><h2>{{.T "recent_title"}}</h2><a href="/gallery">{{.T "gallery"}}</a></div>
+      <div class="work-grid small">
+        {{range .Recent}}{{template "work-card" .}}{{else}}<p class="muted">Qualified previews will appear here after checks.</p>{{end}}
+      </div>
+    </section>
+  </main>
+
+  {{template "footer" .}}
+  {{template "consent" .}}
+</body>
+</html>
