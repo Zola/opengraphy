@@ -22,15 +22,24 @@ document.addEventListener('click', async (event) => {
   }
 });
 
+function getCookie(name) {
+  return document.cookie.split('; ').find(row => row.startsWith(`${name}=`))?.split('=')[1] || '';
+}
+
+function setCookie(name, value, maxAge) {
+  document.cookie = `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${maxAge}; SameSite=Lax`;
+}
+
 const consent = $('[data-consent]');
-if (consent && !localStorage.getItem('og_consent')) consent.hidden = false;
+if (consent && !getCookie('og_consent')) consent.hidden = false;
 document.addEventListener('click', (event) => {
-  if (event.target.matches('[data-consent-accept]')) {
-    localStorage.setItem('og_consent', 'accepted');
+  if (!consent) return;
+  if (event.target.closest('[data-consent-accept]')) {
+    setCookie('og_consent', 'accepted', 31536000);
     consent.hidden = true;
   }
-  if (event.target.matches('[data-consent-reject]')) {
-    localStorage.setItem('og_consent', 'necessary');
+  if (event.target.closest('[data-consent-reject]')) {
+    setCookie('og_consent', 'necessary', 31536000);
     consent.hidden = true;
   }
 });
