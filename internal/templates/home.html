@@ -4,30 +4,30 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{.Title}}</title>
-  <meta name="description" content="OpenGraphy checks Open Graph and Twitter Card metadata with social previews, diagnostics, and repair suggestions.">
-  <link rel="stylesheet" href="/static/css/app.css?v=20260503-3">
-  <script defer src="/static/js/app.js?v=20260503-3"></script>
+  <meta name="description" content="OpenGraphy 是免費的 Open Graph、Twitter Card 與社群分享預覽檢測工具，提供 metadata 解析、平台預覽、診斷報告與修復建議。">
+  <link rel="stylesheet" href="/static/css/app.css?v=20260503-4">
+  <script defer src="/static/js/app.js?v=20260503-4"></script>
 </head>
 <body>
   <header class="topbar">
     <a class="brand" href="/"><span class="brand-mark"></span>{{call .T "brand"}}</a>
-    <nav><a href="/">{{call .T "home"}}</a><a href="/gallery">{{call .T "gallery"}}</a><a href="/privacy">{{call .T "privacy"}}</a></nav>
+    <nav><a href="/">首頁</a><a href="/gallery">作品牆</a><a href="/privacy">隱私政策</a></nav>
   </header>
 
   <main>
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">Open Graph / Twitter Card / Social Preview</p>
-        <h1>{{call .T "hero_title"}}</h1>
-        <p class="lead">{{call .T "hero_subtitle"}}</p>
+        <p class="eyebrow">Open Graph / Twitter Card / 社群預覽檢測</p>
+        <h1>一站式生成、檢測與預覽 Open Graph Meta Tags</h1>
+        <p class="lead">輸入網址，OpenGraphy 會從伺服器端抓取網頁原始 HTML，解析 Open Graph 與 Twitter Card metadata，展示各平台分享卡片，並給出可執行的修復建議。</p>
         <form class="check-form" action="/check" method="post">
-          <input name="url" type="url" required placeholder='{{call .T "url_placeholder"}}'>
-          <button type="submit">{{call .T "check"}}</button>
+          <input name="url" type="url" required placeholder='輸入要檢測的網址，例如 https://example.com'>
+          <button type="submit">檢測預覽</button>
         </form>
         <div class="stats-row" data-stats>
-          <span><strong data-online>{{.Stats.Online}}</strong> {{call .T "stats_online"}}</span>
-          <span><strong data-visits>{{.Stats.VisitsTotal}}</strong> {{call .T "stats_visits"}}</span>
-          <span><strong data-checks>{{.Stats.ChecksTotal}}</strong> {{call .T "stats_checks"}}</span>
+          <span><strong data-online>{{.Stats.Online}}</strong> 人在線</span>
+          <span><strong data-visits>{{.Stats.VisitsTotal}}</strong> 次訪問</span>
+          <span><strong data-checks>{{.Stats.ChecksTotal}}</strong> 次檢測</span>
         </div>
       </div>
       <div class="hero-panel">
@@ -35,15 +35,15 @@
           <div class="browser-bar"><span></span><span></span><span></span></div>
           <div class="mock-preview">
             <div class="mock-image"></div>
-            <div><strong>acme.example</strong><h3>Launch-ready website previews</h3><p>Metadata that looks intentional wherever customers share your link.</p></div>
+            <div><strong>acme.example</strong><h3>發布前就確認分享預覽</h3><p>讓客戶在 Facebook、LinkedIn、Slack 或訊息 App 裡看到一致、清楚、有吸引力的連結卡片。</p></div>
           </div>
-          <div class="mini-report"><b>92</b><span>Preview score</span><em>7 checks passed</em></div>
+          <div class="mini-report"><b>92</b><span>預覽分數</span><em>7 項檢查通過</em></div>
         </div>
       </div>
     </section>
 
     <section class="band">
-      <h2>Built for the places links actually travel</h2>
+      <h2>支援連結真正會被分享出去的平台</h2>
       <div class="platform-grid">
         <article>Facebook</article><article>X / Twitter</article><article>LinkedIn</article><article>Slack</article>
         <article>Discord</article><article>WhatsApp</article><article>Telegram</article><article>Pinterest</article>
@@ -52,13 +52,13 @@
 
     <section class="split-section">
       <div>
-        <h2>Secure fetching, accurate parsing, useful fixes</h2>
-        <p>OpenGraphy fetches pages from the server, blocks private networks, parses the initial HTML source, checks image reachability, and turns findings into clear repair suggestions.</p>
+        <h2>安全抓取、準確解析、可信預覽</h2>
+        <p>OpenGraphy 不在使用者瀏覽器裡抓取目標網站，而是由後端模擬 crawler 行為：檢查 DNS 與重定向、阻擋私有網段、解析初始 HTML、驗證圖片是否可訪問，最後把結果整理成診斷報告與修復建議。</p>
       </div>
       <div class="feature-list">
-        <p><b>SSRF protection</b><span>DNS and redirect validation for every request.</span></p>
-        <p><b>4-hour cache</b><span>Redis metadata cache with no long-term URL history.</span></p>
-        <p><b>Diagnostics</b><span>Missing tags, image issues, length checks, and generated snippets.</span></p>
+        <p><b>SSRF 防護</b><span>每次抓取都檢查 DNS、IP 範圍與每一步重定向，避免訪問 localhost、內網與保留位址。</span></p>
+        <p><b>4 小時快取</b><span>metadata 與預覽結果暫存在 Redis，不長期保存 URL 歷史，也不保存使用者個資。</span></p>
+        <p><b>診斷建議</b><span>檢查缺失標籤、相對圖片 URL、圖片尺寸、HTTP 狀態、標題長度與描述長度。</span></p>
       </div>
     </section>
 
@@ -131,9 +131,9 @@
     </section>
 
     <section class="gallery-teaser">
-      <div class="section-head"><h2>{{call .T "recent_title"}}</h2><a href="/gallery">{{call .T "gallery"}}</a></div>
+      <div class="section-head"><h2>最新合格作品</h2><a href="/gallery">查看作品牆</a></div>
       <div class="work-grid small">
-        {{range .Recent}}{{template "work-card" .}}{{else}}<p class="muted">Qualified previews will appear here after checks.</p>{{end}}
+        {{range .Recent}}{{template "work-card" .}}{{else}}<p class="muted">完成檢測並符合展示條件的網站預覽，會出現在這裡。</p>{{end}}
       </div>
     </section>
   </main>
