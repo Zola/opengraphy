@@ -10,24 +10,24 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="/"><span class="brand-mark"></span>{{.T "brand"}}</a>
-    <nav><a href="/">{{.T "home"}}</a><a href="/gallery">{{.T "gallery"}}</a><a href="/privacy">{{.T "privacy"}}</a></nav>
+    <a class="brand" href="/"><span class="brand-mark"></span>{{call .T "brand"}}</a>
+    <nav><a href="/">{{call .T "home"}}</a><a href="/gallery">{{call .T "gallery"}}</a><a href="/privacy">{{call .T "privacy"}}</a></nav>
   </header>
 
   <main>
     <section class="hero">
       <div class="hero-copy">
         <p class="eyebrow">Open Graph / Twitter Card / Social Preview</p>
-        <h1>{{.T "hero_title"}}</h1>
-        <p class="lead">{{.T "hero_subtitle"}}</p>
+        <h1>{{call .T "hero_title"}}</h1>
+        <p class="lead">{{call .T "hero_subtitle"}}</p>
         <form class="check-form" action="/check" method="post">
-          <input name="url" type="url" required placeholder="{{.T "url_placeholder"}}">
-          <button type="submit">{{.T "check"}}</button>
+          <input name="url" type="url" required placeholder='{{call .T "url_placeholder"}}'>
+          <button type="submit">{{call .T "check"}}</button>
         </form>
         <div class="stats-row" data-stats>
-          <span><strong data-online>{{.Stats.Online}}</strong> {{.T "stats_online"}}</span>
-          <span><strong data-visits>{{.Stats.VisitsTotal}}</strong> {{.T "stats_visits"}}</span>
-          <span><strong data-checks>{{.Stats.ChecksTotal}}</strong> {{.T "stats_checks"}}</span>
+          <span><strong data-online>{{.Stats.Online}}</strong> {{call .T "stats_online"}}</span>
+          <span><strong data-visits>{{.Stats.VisitsTotal}}</strong> {{call .T "stats_visits"}}</span>
+          <span><strong data-checks>{{.Stats.ChecksTotal}}</strong> {{call .T "stats_checks"}}</span>
         </div>
       </div>
       <div class="hero-panel">
@@ -63,7 +63,7 @@
     </section>
 
     <section class="gallery-teaser">
-      <div class="section-head"><h2>{{.T "recent_title"}}</h2><a href="/gallery">{{.T "gallery"}}</a></div>
+      <div class="section-head"><h2>{{call .T "recent_title"}}</h2><a href="/gallery">{{call .T "gallery"}}</a></div>
       <div class="work-grid small">
         {{range .Recent}}{{template "work-card" .}}{{else}}<p class="muted">Qualified previews will appear here after checks.</p>{{end}}
       </div>

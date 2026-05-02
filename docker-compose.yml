@@ -12,7 +12,8 @@ services:
       - app-data:/data
     networks:
       internal:
-      proxy:
+        aliases:
+          - opengraphy-app
     depends_on:
       - redis
     restart: unless-stopped

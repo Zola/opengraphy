@@ -2,7 +2,7 @@
 <html lang="{{.Locale}}">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{.Title}}</title><link rel="stylesheet" href="/static/css/app.css"></head>
 <body>
-  <header class="topbar"><a class="brand" href="/"><span class="brand-mark"></span>{{.T "brand"}}</a><nav><a href="/">{{.T "home"}}</a><a href="/gallery">{{.T "gallery"}}</a></nav></header>
+  <header class="topbar"><a class="brand" href="/"><span class="brand-mark"></span>{{call .T "brand"}}</a><nav><a href="/">{{call .T "home"}}</a><a href="/gallery">{{call .T "gallery"}}</a></nav></header>
   <main class="legal"><h1>Terms</h1><p>Use OpenGraphy only for public websites you are allowed to inspect. The service blocks private networks and reserves the right to rate limit abusive traffic. Gallery entries are public website previews and can be refreshed or removed by administrators later.</p></main>
   {{template "footer" .}}
 </body></html>

@@ -9,14 +9,14 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="/"><span class="brand-mark"></span>{{.T "brand"}}</a>
-    <nav><a href="/">{{.T "home"}}</a><a href="/gallery">{{.T "gallery"}}</a></nav>
+    <a class="brand" href="/"><span class="brand-mark"></span>{{call .T "brand"}}</a>
+    <nav><a href="/">{{call .T "home"}}</a><a href="/gallery">{{call .T "gallery"}}</a></nav>
   </header>
   <main>
     <section class="url-ribbon"><span>&lt;/&gt;</span><strong>{{.URL}}</strong></section>
     <form class="check-form centered" action="/check" method="post">
       <input name="url" type="url" required value="{{.URL}}">
-      <button type="submit">{{.T "check"}}</button>
+      <button type="submit">{{call .T "check"}}</button>
     </form>
 
     {{if .Error}}
@@ -40,20 +40,20 @@
 
       <section class="panel-two">
         <div class="meta-editor">
-          <h2>{{.T "metadata"}}</h2>
+          <h2>{{call .T "metadata"}}</h2>
           <label>Title<input value="{{.Result.Preview.Title}}"></label>
           <label>Description<textarea>{{.Result.Preview.Description}}</textarea></label>
           <label>Image<input value="{{.Result.Preview.Image}}"></label>
           <label>Final URL<input value="{{.Result.FinalURL}}"></label>
         </div>
         <div class="code-box">
-          <h2>{{.T "code"}} <button type="button" data-copy="#generated-code">Copy</button></h2>
+          <h2>{{call .T "code"}} <button type="button" data-copy="#generated-code">Copy</button></h2>
           <pre id="generated-code"><code>{{.Result.Generated}}</code></pre>
         </div>
       </section>
 
       <section class="diagnostics">
-        <h2>{{.T "diagnostics"}}</h2>
+        <h2>{{call .T "diagnostics"}}</h2>
         <div class="diag-list">
           {{range .Result.Diagnostics}}
             <article class="{{.Severity}}"><strong>{{.Field}}</strong><p>{{.Message}}</p><small>{{.Fix}}</small></article>

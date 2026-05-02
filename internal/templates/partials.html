@@ -15,16 +15,16 @@
 
 {{define "footer"}}
 <footer class="site-footer">
-  <div><b>{{.T "brand"}}</b><p>Secure Open Graph diagnostics and social preview testing.</p></div>
+  <div><b>{{call .T "brand"}}</b><p>Secure Open Graph diagnostics and social preview testing.</p></div>
   <form data-lang-form><label>Language <select name="lang">{{range .Locales}}<option value="{{.}}" {{if eq $.Locale .}}selected{{end}}>{{.}}</option>{{end}}</select></label></form>
-  <nav><a href="/privacy">{{.T "privacy"}}</a><a href="/terms">{{.T "terms"}}</a><a href="https://developers.facebook.com/tools/debug/" rel="noopener" target="_blank">Facebook Debugger</a><a href="https://www.linkedin.com/post-inspector/" rel="noopener" target="_blank">LinkedIn Inspector</a></nav>
+  <nav><a href="/privacy">{{call .T "privacy"}}</a><a href="/terms">{{call .T "terms"}}</a><a href="https://developers.facebook.com/tools/debug/" rel="noopener" target="_blank">Facebook Debugger</a><a href="https://www.linkedin.com/post-inspector/" rel="noopener" target="_blank">LinkedIn Inspector</a></nav>
 </footer>
 {{end}}
 
 {{define "consent"}}
 <div class="consent" data-consent hidden>
-  <p>{{.T "consent"}}</p>
-  <button data-consent-accept>{{.T "accept"}}</button>
-  <button data-consent-reject>{{.T "reject"}}</button>
+  <p>{{call .T "consent"}}</p>
+  <button data-consent-accept>{{call .T "accept"}}</button>
+  <button data-consent-reject>{{call .T "reject"}}</button>
 </div>
 {{end}}
