@@ -55,8 +55,18 @@ if (langForm) {
 
 function renderPKCard(button, work, side) {
   button.dataset.id = work.id;
-  button.innerHTML = `<img src="${escapeAttr(work.image)}" alt=""><div><small>${escapeHTML(work.domain)}</small><h3>${escapeHTML(work.title)}</h3><p>${escapeHTML(work.description || '')}</p><span>${work.rating} pts</span></div>`;
+  const visitURL = work.final_url || work.url || '';
+  button.innerHTML = `<img src="${escapeAttr(work.image)}" alt=""><div><small>${escapeHTML(work.domain)}</small><h3>${escapeHTML(work.title)}</h3><p>${escapeHTML(work.description || '')}</p><a class="pk-visit-link" href="${escapeAttr(visitURL)}" target="_blank" rel="noopener noreferrer" title="開啟 ${escapeAttr(visitURL)}">${escapeHTML(work.domain || visitURL)}</a></div>`;
   button.onclick = () => vote(side);
+  const link = $('.pk-visit-link', button);
+  if (link) link.onclick = event => event.stopPropagation();
+  button.onkeydown = event => {
+    if (event.target.closest('.pk-visit-link')) return;
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      vote(side);
+    }
+  };
 }
 
 async function loadPair() {
