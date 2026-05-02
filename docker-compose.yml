@@ -14,6 +14,7 @@ services:
       internal:
         aliases:
           - opengraphy-app
+      egress:
     depends_on:
       - redis
     restart: unless-stopped
@@ -44,5 +45,6 @@ volumes:
 networks:
   internal:
     internal: true
+  egress:
   proxy:
     external: true
