@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{.Title}}</title>
   <meta name="description" content="OpenGraphy checks Open Graph and Twitter Card metadata with social previews, diagnostics, and repair suggestions.">
-  <link rel="stylesheet" href="/static/css/app.css?v=20260503-2">
-  <script defer src="/static/js/app.js?v=20260503-2"></script>
+  <link rel="stylesheet" href="/static/css/app.css?v=20260503-3">
+  <script defer src="/static/js/app.js?v=20260503-3"></script>
 </head>
 <body>
   <header class="topbar">
@@ -59,6 +59,74 @@
         <p><b>SSRF protection</b><span>DNS and redirect validation for every request.</span></p>
         <p><b>4-hour cache</b><span>Redis metadata cache with no long-term URL history.</span></p>
         <p><b>Diagnostics</b><span>Missing tags, image issues, length checks, and generated snippets.</span></p>
+      </div>
+    </section>
+
+    <section class="knowledge-section">
+      <div class="section-head stacked">
+        <h2>用 Open Graph 讓每一次分享都像精心設計的廣告位</h2>
+        <p>Open Graph 是社群平台、即時通訊軟體和內容工具讀取網頁預覽的共同語言。只要在 HTML 的 <code>&lt;head&gt;</code> 裡放對標籤，你就能控制分享卡片的標題、描述、圖片、網址和內容類型，避免平台隨機抓錯圖、截斷標題，或只顯示一條冷冰冰的連結。</p>
+      </div>
+      <div class="article-grid">
+        <article>
+          <h3>Open Graph 是什麼？</h3>
+          <p>OG 標籤是一組給 crawler 看的 metadata。Facebook、LinkedIn、Slack、Discord、WhatsApp、Telegram、X 等平台在產生連結預覽時，通常會先讀取 <code>og:title</code>、<code>og:description</code> 和 <code>og:image</code>。它不直接提升搜尋排名，但更漂亮、更一致的分享預覽會提高點擊率、轉發率和品牌可信度。</p>
+        </article>
+        <article>
+          <h3>建議圖片尺寸</h3>
+          <p>最穩妥的預覽圖尺寸是 <strong>1200 x 630</strong>，比例約為 <strong>1.91:1</strong>。這個尺寸能覆蓋 Facebook、LinkedIn、X large card、Slack 和 Discord 等常見場景。圖片請盡量壓到 1 MB 以內，WhatsApp、iMessage 這類通訊工具對圖片大小更敏感。</p>
+        </article>
+        <article>
+          <h3>為什麼要從後端抓取？</h3>
+          <p>大多數平台 crawler 不會執行瀏覽器裡的 JavaScript，也不會幫你等待 SPA 完成渲染。OpenGraphy 從伺服器端抓取原始 HTML，模擬 crawler 的行為，並檢查重定向、HTTP 狀態、圖片可訪問性和常見安全風險。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="og-spec-section">
+      <div>
+        <h2>最小可用的 Open Graph 標籤</h2>
+        <p class="muted">如果你只能先做一件事，請先把標題、描述、圖片和 canonical URL 補齊。這幾個標籤能消除大部分「預覽圖錯了」和「分享卡片不好看」的問題。</p>
+      </div>
+      <pre class="snippet"><code>&lt;meta property="og:title" content="你的頁面標題" /&gt;
+&lt;meta property="og:description" content="一段清楚、有吸引力的頁面摘要。" /&gt;
+&lt;meta property="og:image" content="https://example.com/preview.png" /&gt;
+&lt;meta property="og:image:width" content="1200" /&gt;
+&lt;meta property="og:image:height" content="630" /&gt;
+&lt;meta property="og:url" content="https://example.com/page" /&gt;
+&lt;meta property="og:type" content="website" /&gt;
+&lt;meta property="og:site_name" content="Example" /&gt;
+&lt;meta name="twitter:card" content="summary_large_image" /&gt;</code></pre>
+    </section>
+
+    <section class="platform-notes">
+      <h2>不同平台會用不同規則解讀同一組 metadata</h2>
+      <div class="note-grid">
+        <article><h3>Facebook</h3><p>重視 <code>og:title</code>、<code>og:description</code> 和 <code>og:image</code>。修改後可能需要用 Sharing Debugger 觸發重新抓取。</p></article>
+        <article><h3>X / Twitter</h3><p>可以回退讀取 OG，但建議另外加 <code>twitter:card</code> 和 <code>twitter:image</code>，才能穩定顯示大圖卡片。</p></article>
+        <article><h3>LinkedIn</h3><p>通常會快取第一次抓到的內容；發布前先檢查，發布後若改圖或改標題，最好用 Post Inspector 重新整理。</p></article>
+        <article><h3>WhatsApp / iMessage</h3><p>圖片檔案太大時容易失敗或被截斷。請壓縮圖片，並明確提供寬高，讓預覽生成更快。</p></article>
+        <article><h3>Discord / Slack / Telegram</h3><p>偏好伺服器初始 HTML 裡就存在的標籤；不要只靠前端 JS 動態插入 metadata。</p></article>
+        <article><h3>Pinterest / Reddit</h3><p>除了寬版圖，電商、作品集和文章頁也可準備方形或直式圖片，讓縮圖在內容流裡更醒目。</p></article>
+      </div>
+    </section>
+
+    <section class="framework-section">
+      <h2>常見技術棧如何接入</h2>
+      <div class="framework-grid">
+        <article><h3>Next.js / Nuxt / Astro</h3><p>優先使用框架提供的 metadata API 或 SSR/SSG，在伺服器輸出的 HTML 裡直接生成 OG 標籤。</p></article>
+        <article><h3>WordPress</h3><p>可以使用 SEO 外掛，也可以在 theme 的 head hook 裡輸出文章標題、摘要、特色圖片和永久連結。</p></article>
+        <article><h3>單頁應用 SPA</h3><p>如果完全依靠客戶端渲染，許多平台 crawler 會看不到 metadata。請加 SSR、預渲染，或為分享頁提供靜態 HTML。</p></article>
+      </div>
+    </section>
+
+    <section class="faq-section">
+      <h2>常見問題</h2>
+      <div class="faq-list">
+        <article><h3>Open Graph 會直接影響 SEO 排名嗎？</h3><p>它通常不是直接排名因子，但能提升社群點擊率和分享品質，間接帶來更多流量、引用和品牌曝光。</p></article>
+        <article><h3>為什麼換圖後平台還顯示舊圖片？</h3><p>平台會快取抓取結果。請使用 Facebook Sharing Debugger、LinkedIn Post Inspector 等工具強制重新抓取，必要時也可以替圖片 URL 加版本參數。</p></article>
+        <article><h3>沒有 OG 標籤會怎樣？</h3><p>平台會自行猜測：抓 <code>&lt;title&gt;</code>、meta description 或頁面裡第一張較大的圖片。結果不可控，常見問題是圖錯、標題太長或完全沒有卡片。</p></article>
+        <article><h3>標籤大小寫有差嗎？</h3><p>有。請使用規範的小寫名稱，例如 <code>og:title</code>，不要寫成 <code>OG:Title</code>。許多 crawler 對大小寫很挑剔。</p></article>
       </div>
     </section>
 
