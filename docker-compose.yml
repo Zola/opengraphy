@@ -3,16 +3,16 @@ services:
     build: .
     environment:
       PORT: "8080"
-      PUBLIC_BASE_URL: "${PUBLIC_BASE_URL:-https://opengraphy.example.com}"
+      PUBLIC_BASE_URL: "${PUBLIC_BASE_URL:-https://opengraph.aston.tw}"
       REDIS_ADDR: "redis:6379"
       SQLITE_PATH: "/data/opengraphy.db"
       RATE_SALT: "${RATE_SALT:-change-me}"
-      BOT_USER_AGENT: "${BOT_USER_AGENT:-OpenGraphyBot/1.0 (+https://opengraphy.example.com/bot)}"
+      BOT_USER_AGENT: "${BOT_USER_AGENT:-OpenGraphyBot/1.0 (+https://opengraph.aston.tw/bot)}"
     volumes:
       - app-data:/data
     networks:
-      - internal
-      - proxy
+      internal:
+      proxy:
     depends_on:
       - redis
     restart: unless-stopped
@@ -29,8 +29,10 @@ services:
     volumes:
       - ./deploy/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
-      - internal
-      - proxy
+      internal:
+      proxy:
+        aliases:
+          - opengraphy-web
     depends_on:
       - app
     restart: unless-stopped

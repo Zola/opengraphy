@@ -85,6 +85,40 @@ Add translations in `internal/i18n/i18n.go`. Language choice uses:
 
 The compose file intentionally does not expose the app container directly to the host. Services communicate on an internal network and the external `proxy` network for reverse-proxy integration.
 
+For `opengraph.aston.tw`:
+
+1. Point DNS `opengraph.aston.tw` to the server running the public reverse proxy.
+2. Create or keep the shared Docker network:
+
+```bash
+docker network create proxy
+```
+
+3. Copy `.env.example` to `.env` and set a strong `RATE_SALT`.
+4. Start this app:
+
+```bash
+docker compose up -d --build
+```
+
+5. In the existing public reverse proxy, route `opengraph.aston.tw` to the Docker network alias:
+
+```nginx
+server {
+    listen 80;
+    server_name opengraph.aston.tw;
+
+    location / {
+        proxy_pass http://opengraphy-web:80;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+If TLS is terminated at the public reverse proxy, issue the certificate there. This app's internal Nginx listens on port 80 only and stays behind the reverse proxy.
+
 Validate compose changes with:
 
 ```bash
