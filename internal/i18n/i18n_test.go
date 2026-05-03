@@ -33,10 +33,10 @@ func TestLocaleAcceptLanguageWinsBeforeQueryFallback(t *testing.T) {
 	}
 }
 
-func TestTemplateKeysExistForEnglishAndTraditionalChinese(t *testing.T) {
+func TestTemplateKeysExistForAllLocales(t *testing.T) {
 	required := templateKeys(t)
 	bundle := New()
-	for _, locale := range []string{"en", "zh-TW"} {
+	for _, locale := range bundle.Locales() {
 		for key := range required {
 			if bundle.data[locale][key] == "" {
 				t.Fatalf("%s missing translation key %q", locale, key)
