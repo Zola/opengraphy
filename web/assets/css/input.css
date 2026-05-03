@@ -130,7 +130,53 @@ body {
   }
 
   .url-ribbon {
+    @apply shadow-panel;
     background: linear-gradient(90deg, #2458ff 0%, #3357f6 52%, #00a88f 100%);
+  }
+
+  .url-ribbon span {
+    @apply shadow-sm;
+  }
+
+  .url-ribbon strong {
+    @apply font-extrabold;
+  }
+
+  .score-strip {
+    @apply items-stretch;
+  }
+
+  .score-strip div {
+    @apply relative overflow-hidden border-line bg-white/90 shadow-sm;
+  }
+
+  .score-strip div::before {
+    content: "";
+    @apply absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand to-emerald-500;
+  }
+
+  .score-strip b {
+    @apply text-ink;
+  }
+
+  .score-strip span {
+    @apply font-bold uppercase tracking-wide;
+  }
+
+  .report-card,
+  .meta-editor,
+  .diagnostics {
+    @apply bg-white/95;
+  }
+
+  .report-card h2,
+  .meta-editor h2,
+  .diagnostics h2 {
+    @apply font-extrabold text-ink;
+  }
+
+  .report-card dl div {
+    @apply rounded-lg bg-slate-50/80 px-3 py-2;
   }
 
   .report-card dt,
@@ -139,12 +185,55 @@ body {
     @apply tracking-wide;
   }
 
+  .report-card dd {
+    @apply text-slate-800;
+  }
+
+  .preview-grid {
+    @apply rounded-none;
+    background: linear-gradient(180deg, #eef4ff 0%, #f7fafc 100%);
+  }
+
+  .social-card {
+    @apply shadow-panel transition hover:-translate-y-0.5 hover:shadow-soft;
+  }
+
+  .social-card b {
+    @apply shadow-sm;
+  }
+
   .preview-placeholder {
     @apply text-slate-500;
   }
 
+  .panel-two {
+    @apply items-stretch;
+  }
+
+  .meta-editor input,
+  .meta-editor textarea {
+    @apply bg-white;
+  }
+
+  .code-box {
+    @apply shadow-soft;
+    background: linear-gradient(135deg, #0f172a 0%, #111827 52%, #172033 100%);
+  }
+
+  .code-box pre {
+    @apply rounded-lg bg-black/20 p-4;
+  }
+
   .diag-list article {
-    @apply shadow-sm;
+    @apply bg-white/95 shadow-sm transition hover:-translate-y-0.5 hover:shadow-panel;
+  }
+
+  .diag-list article strong {
+    @apply text-ink;
+  }
+
+  .diag-list article small {
+    @apply leading-relaxed text-slate-700;
   }
 
   .consent {
@@ -202,6 +291,30 @@ body {
 
   .stats-row strong {
     @apply block text-xl;
+  }
+
+  .url-ribbon {
+    @apply rounded-none;
+  }
+
+  .score-strip div {
+    @apply px-4 py-4;
+  }
+
+  .report-card dl div {
+    @apply px-3 py-2;
+  }
+
+  .preview-grid {
+    @apply gap-4;
+  }
+
+  .social-card h3 {
+    @apply text-lg;
+  }
+
+  .code-box pre {
+    @apply p-3;
   }
 }
 
