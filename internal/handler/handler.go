@@ -224,6 +224,14 @@ func (a *App) apiLang(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.SetCookie(w, &http.Cookie{Name: "lang", Value: locale, Path: "/", MaxAge: 365 * 24 * 3600, SameSite: http.SameSiteLaxMode})
+	if !strings.Contains(r.Header.Get("Accept"), "application/json") {
+		target := r.Referer()
+		if target == "" {
+			target = "/"
+		}
+		http.Redirect(w, r, target, http.StatusSeeOther)
+		return
+	}
 	writeJSON(w, http.StatusOK, map[string]string{"ok": "true"})
 }
 

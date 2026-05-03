@@ -16,7 +16,7 @@
 {{define "footer"}}
 <footer class="site-footer">
   <div><b>{{call .T "brand"}}</b><p>{{call .T "footer_body"}}</p></div>
-  <form data-lang-form><label>{{call .T "language_label"}} <select name="lang">{{range .Locales}}<option value="{{.}}" {{if eq $.Locale .}}selected{{end}}>{{index $.LocaleLabels .}}</option>{{end}}</select></label></form>
+  <form data-lang-form action="/api/lang" method="post"><label>{{call .T "language_label"}} <select name="lang">{{range .Locales}}<option value="{{.}}" {{if eq $.Locale .}}selected{{end}}>{{index $.LocaleLabels .}}</option>{{end}}</select></label><noscript><button type="submit">{{call .T "apply_language"}}</button></noscript></form>
   <nav><a href="/privacy">{{call .T "privacy"}}</a><a href="/terms">{{call .T "terms"}}</a><a href="https://developers.facebook.com/tools/debug/" rel="noopener" target="_blank">{{call .T "facebook_debugger"}}</a><a href="https://www.linkedin.com/post-inspector/" rel="noopener" target="_blank">{{call .T "linkedin_inspector"}}</a></nav>
 </footer>
 {{end}}
