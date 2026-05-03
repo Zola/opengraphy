@@ -20,6 +20,7 @@ type Config struct {
 	MaxHTMLBytes  int64
 	MaxRedirects  int
 	RateSalt      string
+	AdminToken    string
 }
 
 func Load() Config {
@@ -37,6 +38,7 @@ func Load() Config {
 		MaxHTMLBytes:  int64(envInt("MAX_HTML_BYTES", 2*1024*1024)),
 		MaxRedirects:  envInt("MAX_REDIRECTS", 5),
 		RateSalt:      env("RATE_SALT", "change-me-in-production"),
+		AdminToken:    env("ADMIN_TOKEN", ""),
 	}
 }
 

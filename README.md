@@ -49,6 +49,7 @@ Copy `.env.example` to `.env` and set:
 - `PUBLIC_BASE_URL`
 - `RATE_SALT`
 - `BOT_USER_AGENT`
+- `ADMIN_TOKEN` optional; when set, enables `/admin/gallery?token=...` for private gallery maintenance.
 
 ## Redis Keys
 
@@ -67,6 +68,8 @@ Copy `.env.example` to `.env` and set:
 ## Gallery Maintenance
 
 Gallery works are persisted in SQLite at `SQLITE_PATH` and hydrated back into Redis when the app starts. The app also syncs Redis gallery state into SQLite at startup and once per hour.
+
+For browser-based maintenance, set `ADMIN_TOKEN` and open `/admin/gallery?token=YOUR_TOKEN` once. The app stores a short-lived HttpOnly admin cookie and redirects back to `/admin/gallery`.
 
 Run maintenance commands inside the app container:
 

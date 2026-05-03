@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="{{.Locale}}">
+<head>
+  {{template "head-meta" .}}
+  <link rel="stylesheet" href="/static/css/app.css?v=20260503-17">
+  <link rel="stylesheet" href="/static/css/tailwind.css?v=20260503-16">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/"><span class="brand-mark"></span>{{call .T "brand"}}</a>
+    <nav><a href="/">{{call .T "home"}}</a><a href="/gallery">{{call .T "gallery"}}</a></nav>
+  </header>
+  <main>
+    <section class="page-title admin-title">
+      <p class="eyebrow">Admin</p>
+      <h1>Gallery maintenance</h1>
+      <p class="muted">Private controls for checking gallery persistence and removing works from the public wall.</p>
+    </section>
+
+    <section class="admin-panel">
+      {{if .Error}}<p class="admin-status">{{.Error}}</p>{{end}}
+      <div class="admin-health">
+        <article><span>Redis recent</span><strong>{{.GalleryHealth.RedisRecent}}</strong></article>
+        <article><span>SQLite works</span><strong>{{.GalleryHealth.SQLiteWorks}}</strong></article>
+        <article><span>Total</span><strong>{{.GalleryHealth.Total}}</strong></article>
+      </div>
+      <div class="admin-actions">
+        <form method="post" action="/admin/gallery/sync"><button type="submit">Sync Redis to SQLite</button></form>
+        <form method="post" action="/admin/gallery/seed"><button type="submit">Seed if empty</button></form>
+      </div>
+    </section>
+
+    <section class="admin-panel">
+      <div class="section-head">
+        <h2>Works</h2>
+        <a href="/gallery" target="_blank" rel="noopener noreferrer">Open public gallery</a>
+      </div>
+      <div class="admin-work-list">
+        {{range .AdminWorks}}
+        <article class="admin-work">
+          <img src="{{.Image}}" alt="">
+          <div>
+            <small>{{.Domain}}</small>
+            <h3>{{.Title}}</h3>
+            <p>{{.Description}}</p>
+            <a href="{{.FinalURL}}" target="_blank" rel="noopener noreferrer">{{.FinalURL}}</a>
+          </div>
+          <form method="post" action="/admin/gallery/remove" onsubmit="return confirm('Remove this work from the public gallery?')">
+            <input type="hidden" name="id" value="{{.ID}}">
+            <button type="submit">Remove</button>
+          </form>
+        </article>
+        {{else}}
+        <p class="muted">No works found.</p>
+        {{end}}
+      </div>
+    </section>
+  </main>
+</body>
+</html>

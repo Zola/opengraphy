@@ -138,6 +138,10 @@ func (s *Store) Leaderboard(ctx context.Context, limit int) []model.Work {
 	return mergeWorks(s.worksByIDs(ctx, ids, limit), s.leaderboardFromDB(ctx, limit), limit)
 }
 
+func (s *Store) All(ctx context.Context, limit int) []model.Work {
+	return s.queryWorks(ctx, `SELECT id,url,final_url,domain,title,description,image,score,rating,wins,losses,first_seen,last_seen FROM works ORDER BY last_seen DESC LIMIT ?`, limit)
+}
+
 func (s *Store) Random(ctx context.Context, limit int) []model.Work {
 	ids := s.rdb.ZRange(ctx, "og:works:recent", 0, -1).Val()
 	rand.Shuffle(len(ids), func(i, j int) { ids[i], ids[j] = ids[j], ids[i] })
@@ -181,6 +185,21 @@ func (s *Store) SeedDefaultsIfEmpty(ctx context.Context) error {
 		}
 	}
 	return nil
+}
+
+func (s *Store) Remove(ctx context.Context, id string) error {
+	if strings.TrimSpace(id) == "" {
+		return errors.New("missing work id")
+	}
+	pipe := s.rdb.Pipeline()
+	pipe.Del(ctx, "og:work:"+id)
+	pipe.ZRem(ctx, "og:works:recent", id)
+	pipe.ZRem(ctx, "og:works:rating", id)
+	if _, err := pipe.Exec(ctx); err != nil {
+		return err
+	}
+	_, err := s.db.ExecContext(ctx, `DELETE FROM works WHERE id=?`, id)
+	return err
 }
 
 func (s *Store) Vote(ctx context.Context, winnerID, loserID string) error {

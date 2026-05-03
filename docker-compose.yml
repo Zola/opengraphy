@@ -8,6 +8,7 @@ services:
       SQLITE_PATH: "/data/opengraphy.db"
       RATE_SALT: "${RATE_SALT:-change-me}"
       BOT_USER_AGENT: "${BOT_USER_AGENT:-OpenGraphyBot/1.0 (+https://opengraph.aston.tw/bot)}"
+      ADMIN_TOKEN: "${ADMIN_TOKEN:-}"
     volumes:
       - app-data:/data
     networks:

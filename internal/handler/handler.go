@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"crypto/rand"
+	"crypto/subtle"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -60,9 +61,11 @@ type PageData struct {
 	URL           string
 	Result        model.CheckResult
 	Stats         stats.Snapshot
+	GalleryHealth gallery.Health
 	Recent        []model.Work
 	Random        []model.Work
 	Leaderboard   []model.Work
+	AdminWorks    []model.Work
 	Error         string
 }
 
@@ -95,6 +98,10 @@ func (a *App) Routes() http.Handler {
 	r.Get("/api/gallery/health", a.apiGalleryHealth)
 	r.Get("/api/pk/pair", a.apiPKPair)
 	r.Post("/api/pk/vote", a.apiPKVote)
+	r.Get("/admin/gallery", a.adminGallery)
+	r.Post("/admin/gallery/sync", a.adminGallerySync)
+	r.Post("/admin/gallery/seed", a.adminGallerySeed)
+	r.Post("/admin/gallery/remove", a.adminGalleryRemove)
 	r.Get("/privacy", a.staticPage("privacy.html", "Privacy"))
 	r.Get("/terms", a.staticPage("terms.html", "Terms"))
 	r.Get("/robots.txt", a.robots)
@@ -293,6 +300,53 @@ func (a *App) apiPKVote(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]model.Work{"left": left, "right": right})
 }
 
+func (a *App) adminGallery(w http.ResponseWriter, r *http.Request) {
+	if !a.requireAdmin(w, r) {
+		return
+	}
+	a.render(w, r, "admin-gallery.html", PageData{
+		Title:         "Gallery Admin - OpenGraphy",
+		NoIndex:       true,
+		GalleryHealth: a.Gallery.Health(r.Context()),
+		AdminWorks:    a.Gallery.All(r.Context(), 200),
+		Error:         r.URL.Query().Get("status"),
+	})
+}
+
+func (a *App) adminGallerySync(w http.ResponseWriter, r *http.Request) {
+	if !a.requireAdmin(w, r) {
+		return
+	}
+	status := "synced"
+	if err := a.Gallery.Sync(r.Context()); err != nil {
+		status = "sync_error"
+	}
+	http.Redirect(w, r, "/admin/gallery?status="+url.QueryEscape(status), http.StatusSeeOther)
+}
+
+func (a *App) adminGallerySeed(w http.ResponseWriter, r *http.Request) {
+	if !a.requireAdmin(w, r) {
+		return
+	}
+	status := "seed_checked"
+	if err := a.Gallery.SeedDefaultsIfEmpty(r.Context()); err != nil {
+		status = "seed_error"
+	}
+	http.Redirect(w, r, "/admin/gallery?status="+url.QueryEscape(status), http.StatusSeeOther)
+}
+
+func (a *App) adminGalleryRemove(w http.ResponseWriter, r *http.Request) {
+	if !a.requireAdmin(w, r) {
+		return
+	}
+	_ = r.ParseForm()
+	status := "removed"
+	if err := a.Gallery.Remove(r.Context(), r.FormValue("id")); err != nil {
+		status = "remove_error"
+	}
+	http.Redirect(w, r, "/admin/gallery?status="+url.QueryEscape(status), http.StatusSeeOther)
+}
+
 func (a *App) staticPage(name, title string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		locale := a.locale(r)
@@ -393,6 +447,45 @@ func (a *App) statsSnapshot(ctx context.Context) stats.Snapshot {
 	return snapshot
 }
 
+func (a *App) requireAdmin(w http.ResponseWriter, r *http.Request) bool {
+	if a.Config.AdminToken == "" {
+		http.NotFound(w, r)
+		return false
+	}
+	if token := r.URL.Query().Get("token"); a.validAdminToken(token) {
+		http.SetCookie(w, &http.Cookie{
+			Name:     "og_admin",
+			Value:    token,
+			Path:     "/admin",
+			MaxAge:   12 * 60 * 60,
+			HttpOnly: true,
+			Secure:   isSecureRequest(r),
+			SameSite: http.SameSiteStrictMode,
+		})
+		http.Redirect(w, r, r.URL.Path, http.StatusSeeOther)
+		return false
+	}
+	if a.validAdminToken(r.Header.Get("X-Admin-Token")) {
+		return true
+	}
+	if c, err := r.Cookie("og_admin"); err == nil && a.validAdminToken(c.Value) {
+		return true
+	}
+	_ = r.ParseForm()
+	if a.validAdminToken(r.FormValue("token")) {
+		return true
+	}
+	http.Error(w, "admin token required", http.StatusUnauthorized)
+	return false
+}
+
+func (a *App) validAdminToken(token string) bool {
+	if token == "" || len(token) != len(a.Config.AdminToken) {
+		return false
+	}
+	return subtle.ConstantTimeCompare([]byte(token), []byte(a.Config.AdminToken)) == 1
+}
+
 func (a *App) diagnosticText(locale string, d model.Diagnostic, suffix string) string {
 	if d.Code == "" {
 		if suffix == "fix" {
@@ -483,4 +576,8 @@ func clientIP(r *http.Request) string {
 		return host
 	}
 	return r.RemoteAddr
+}
+
+func isSecureRequest(r *http.Request) bool {
+	return r.TLS != nil || strings.EqualFold(r.Header.Get("X-Forwarded-Proto"), "https")
 }
