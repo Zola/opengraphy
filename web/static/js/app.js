@@ -56,7 +56,8 @@ if (langForm) {
 function renderPKCard(button, work, side) {
   button.dataset.id = work.id;
   const visitURL = work.final_url || work.url || '';
-  button.innerHTML = `<img src="${escapeAttr(work.image)}" alt=""><div><small>${escapeHTML(work.domain)}</small><h3>${escapeHTML(work.title)}</h3><p>${escapeHTML(work.description || '')}</p><a class="pk-visit-link" href="${escapeAttr(visitURL)}" target="_blank" rel="noopener noreferrer" title="開啟 ${escapeAttr(visitURL)}">${escapeHTML(work.domain || visitURL)}</a></div>`;
+  const openLabel = $('[data-open-link]')?.dataset.openLink || 'Open';
+  button.innerHTML = `<img src="${escapeAttr(work.image)}" alt=""><div><small>${escapeHTML(work.domain)}</small><h3>${escapeHTML(work.title)}</h3><p>${escapeHTML(work.description || '')}</p><a class="pk-visit-link" href="${escapeAttr(visitURL)}" target="_blank" rel="noopener noreferrer" title="${escapeAttr(openLabel)} ${escapeAttr(visitURL)}">${escapeHTML(work.domain || visitURL)}</a></div>`;
   button.onclick = () => vote(side);
   const link = $('.pk-visit-link', button);
   if (link) link.onclick = event => event.stopPropagation();

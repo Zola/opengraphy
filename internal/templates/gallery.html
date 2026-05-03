@@ -18,7 +18,7 @@
       <div class="work-grid">{{range .Recent}}{{template "work-card" .}}{{else}}<p class="muted">{{call .T "no_works"}}</p>{{end}}</div>
     </section>
 
-    <section class="pk-section" data-pk>
+    <section class="pk-section" data-pk data-open-link="{{call .T "open_link"}}">
       <h2>{{call .T "pk_title"}}</h2>
       <div class="pk-pair">
         <article data-pk-left class="pk-card" role="button" tabindex="0">{{call .T "load_pair"}}</article>
