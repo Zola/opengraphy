@@ -14,7 +14,7 @@ func New() *Bundle {
 	b := &Bundle{data: map[string]map[string]string{
 		"en": {
 			"brand": "OpenGraphy", "home": "Home", "gallery": "Gallery", "privacy": "Privacy", "terms": "Terms",
-			"hero_title": "Trustworthy social previews for every website", "hero_subtitle": "Check Open Graph and Twitter Card metadata, preview social cards, and get repair suggestions before your links go public.",
+			"hero_title": "Preview your website's social media first impression", "hero_subtitle": "Generate Open Graph meta tags, test social previews, and fix how your links appear before customers share them.",
 			"url_placeholder": "URL to check", "check": "Check Preview", "stats_online": "online", "stats_visits": "visits", "stats_checks": "checks",
 			"recent_title": "Newest qualified previews", "random_title": "Discover and vote", "leaderboard_title": "Most loved previews",
 			"pk_title": "Which preview wins?", "vote_left": "Left wins", "vote_right": "Right wins", "diagnostics": "Diagnostics", "metadata": "Metadata", "code": "Code",
@@ -22,13 +22,13 @@ func New() *Bundle {
 		},
 		"zh-TW": {
 			"brand": "OpenGraphy", "home": "首頁", "gallery": "作品牆", "privacy": "隱私", "terms": "條款",
-			"hero_title": "讓每個網站都有可信的社群預覽", "hero_subtitle": "偵測 Open Graph 與 Twitter Card metadata，預覽社群卡片，並在連結公開前取得修復建議。",
+			"hero_title": "預覽網站在社群媒體上的第一印象", "hero_subtitle": "生成 Open Graph 元標籤，測試社群預覽效果，並在客戶分享連結前修好顯示問題。",
 			"url_placeholder": "輸入要檢測的網址", "check": "檢測預覽", "stats_online": "在線", "stats_visits": "訪問", "stats_checks": "檢測",
 			"recent_title": "最新合格作品", "random_title": "探索並投票", "leaderboard_title": "最受歡迎作品榜",
 			"pk_title": "哪個預覽更吸引你？", "vote_left": "左邊勝出", "vote_right": "右邊勝出", "diagnostics": "診斷報告", "metadata": "元資料", "code": "代碼",
 			"consent": "我們只使用語言、同意狀態與匿名在線人數所需 cookie，不使用追蹤 cookie。", "accept": "接受", "reject": "拒絕可選",
 		},
-		"zh-CN": {"brand": "OpenGraphy", "home": "首页", "gallery": "作品墙", "privacy": "隐私", "terms": "条款", "hero_title": "让每个网站都有可信的社交预览", "hero_subtitle": "检测 Open Graph 与 Twitter Card metadata，预览社交卡片，并获得修复建议。", "url_placeholder": "输入要检测的网址", "check": "检测预览", "stats_online": "在线", "stats_visits": "访问", "stats_checks": "检测", "recent_title": "最新合格作品", "random_title": "探索并投票", "leaderboard_title": "最受欢迎作品榜", "pk_title": "哪个预览更吸引你？", "vote_left": "左边胜出", "vote_right": "右边胜出", "diagnostics": "诊断报告", "metadata": "元数据", "code": "代码", "consent": "我们只使用必要 cookie，不使用追踪 cookie。", "accept": "接受", "reject": "拒绝可选"},
+		"zh-CN": {"brand": "OpenGraphy", "home": "首页", "gallery": "作品墙", "privacy": "隐私", "terms": "条款", "hero_title": "预览网站在社交媒体上的第一印象", "hero_subtitle": "生成 Open Graph 元标签，测试社交预览效果，并在客户分享链接前修好显示问题。", "url_placeholder": "输入要检测的网址", "check": "检测预览", "stats_online": "在线", "stats_visits": "访问", "stats_checks": "检测", "recent_title": "最新合格作品", "random_title": "探索并投票", "leaderboard_title": "最受欢迎作品榜", "pk_title": "哪个预览更吸引你？", "vote_left": "左边胜出", "vote_right": "右边胜出", "diagnostics": "诊断报告", "metadata": "元数据", "code": "代码", "consent": "我们只使用必要 cookie，不使用追踪 cookie。", "accept": "接受", "reject": "拒绝可选"},
 		"ja":    {"brand": "OpenGraphy", "home": "ホーム", "gallery": "ギャラリー", "privacy": "プライバシー", "terms": "規約", "hero_title": "信頼できるソーシャルプレビューをすべてのサイトに", "hero_subtitle": "Open Graph と Twitter Card を検査し、修正提案を表示します。", "url_placeholder": "チェックするURL", "check": "プレビュー確認", "stats_online": "オンライン", "stats_visits": "訪問", "stats_checks": "検査", "recent_title": "新着プレビュー", "random_title": "発見して投票", "leaderboard_title": "人気ランキング", "pk_title": "どちらが良いですか？", "vote_left": "左", "vote_right": "右", "diagnostics": "診断", "metadata": "Metadata", "code": "コード", "consent": "必要なCookieのみ使用します。", "accept": "同意", "reject": "拒否"},
 		"ko":    {"brand": "OpenGraphy", "home": "홈", "gallery": "갤러리", "privacy": "개인정보", "terms": "약관", "hero_title": "모든 웹사이트를 위한 신뢰 가능한 소셜 미리보기", "hero_subtitle": "Open Graph와 Twitter Card를 검사하고 개선 제안을 제공합니다.", "url_placeholder": "검사할 URL", "check": "검사", "stats_online": "온라인", "stats_visits": "방문", "stats_checks": "검사", "recent_title": "최신 미리보기", "random_title": "둘러보고 투표", "leaderboard_title": "인기 순위", "pk_title": "어느 쪽이 더 좋나요?", "vote_left": "왼쪽", "vote_right": "오른쪽", "diagnostics": "진단", "metadata": "Metadata", "code": "코드", "consent": "필수 쿠키만 사용합니다.", "accept": "동의", "reject": "거절"},
 		"es":    {"brand": "OpenGraphy", "home": "Inicio", "gallery": "Galería", "privacy": "Privacidad", "terms": "Términos", "hero_title": "Previsualizaciones sociales confiables", "hero_subtitle": "Comprueba Open Graph y Twitter Card con sugerencias de mejora.", "url_placeholder": "URL para comprobar", "check": "Comprobar", "stats_online": "en línea", "stats_visits": "visitas", "stats_checks": "checks", "recent_title": "Últimos previews", "random_title": "Descubre y vota", "leaderboard_title": "Ranking", "pk_title": "¿Cuál gana?", "vote_left": "Izquierda", "vote_right": "Derecha", "diagnostics": "Diagnóstico", "metadata": "Metadata", "code": "Código", "consent": "Usamos solo cookies necesarias.", "accept": "Aceptar", "reject": "Rechazar"},
@@ -47,14 +47,14 @@ func New() *Bundle {
 }
 
 var enExtra = map[string]string{
-	"meta_description":     "OpenGraphy is a free Open Graph, Twitter Card, and social preview checker with metadata parsing, platform previews, diagnostics, and repair suggestions.",
-	"hero_eyebrow":         "Open Graph / Twitter Card / Social Preview Checker",
-	"hero_title_full":      "Generate, inspect, and preview Open Graph meta tags in one place",
-	"hero_subtitle_full":   "Enter a URL and OpenGraphy fetches the original HTML from the server, parses Open Graph and Twitter Card metadata, previews social cards, and returns practical repair suggestions.",
+	"meta_description":     "OpenGraphy helps developers and website owners preview social media link cards, generate Open Graph meta tags, and fix metadata issues before links go public.",
+	"hero_eyebrow":         "Open Graph Tester / Social Preview / Meta Tag Generator",
+	"hero_title_full":      "Preview your website's social media first impression",
+	"hero_subtitle_full":   "Enter a URL to see how your website appears on Facebook, X, LinkedIn, Slack, and messaging apps. Generate Open Graph meta tags, diagnose metadata issues, and fix your link preview before customers share it.",
 	"url_placeholder_full": "Enter a URL to check, for example https://example.com",
 	"stats_online_full":    "online", "stats_visits_full": "visits", "stats_checks_full": "checks",
-	"mock_title":    "Check your share preview before launch",
-	"mock_body":     "Make your links look consistent, clear, and compelling across Facebook, LinkedIn, Slack, and messaging apps.",
+	"mock_title":    "See the card before your customers do",
+	"mock_body":     "Turn plain links into clear, clickable social previews with the right title, description, image, and Open Graph tags.",
 	"preview_score": "Preview score", "checks_passed": "checks passed",
 	"platforms_title":    "Built for the places links actually travel",
 	"secure_title":       "Secure fetching, accurate parsing, trustworthy previews",
@@ -140,13 +140,13 @@ var enExtra = map[string]string{
 }
 
 var zhTWExtra = map[string]string{
-	"meta_description":     "OpenGraphy 是免費的 Open Graph、Twitter Card 與社群分享預覽檢測工具，提供 metadata 解析、平台預覽、診斷報告與修復建議。",
-	"hero_eyebrow":         "Open Graph / Twitter Card / 社群預覽檢測",
-	"hero_title_full":      "一站式生成、檢測與預覽 Open Graph Meta Tags",
-	"hero_subtitle_full":   "輸入網址，OpenGraphy 會從伺服器端抓取網頁原始 HTML，解析 Open Graph 與 Twitter Card metadata，展示各平台分享卡片，並給出可執行的修復建議。",
+	"meta_description":     "OpenGraphy 幫助網站開發者與網站擁有者預覽社群媒體連結卡片、生成 Open Graph 元標籤，並在連結公開前修好 metadata 問題。",
+	"hero_eyebrow":         "Open Graph 測試器 / 社群分享預覽 / Meta Tags 生成",
+	"hero_title_full":      "預覽網站在社群媒體上的第一印象",
+	"hero_subtitle_full":   "輸入網址，立即查看你的網站在 Facebook、X、LinkedIn、Slack 和訊息 App 裡如何顯示；生成 Open Graph 元標籤，診斷 metadata 問題，並在客戶分享連結前修好預覽。",
 	"url_placeholder_full": "輸入要檢測的網址，例如 https://example.com",
 	"stats_online_full":    "人在線", "stats_visits_full": "次訪問", "stats_checks_full": "次檢測",
-	"mock_title": "發布前就確認分享預覽", "mock_body": "讓客戶在 Facebook、LinkedIn、Slack 或訊息 App 裡看到一致、清楚、有吸引力的連結卡片。",
+	"mock_title": "先看到客戶會看到的分享卡片", "mock_body": "用正確的標題、描述、圖片與 Open Graph 標籤，把普通連結變成清楚、可信、值得點擊的社群預覽。",
 	"preview_score": "預覽分數", "checks_passed": "項檢查通過",
 	"platforms_title":    "支援連結真正會被分享出去的平台",
 	"secure_title":       "安全抓取、準確解析、可信預覽",
@@ -781,16 +781,16 @@ func init() {
 		zhCNExtra[k] = strings.NewReplacer("預", "预", "檢", "检", "測", "测", "與", "与", "隱", "隐", "條", "条", "網", "网", "準", "准", "確", "确", "覽", "览", "議", "议", "語", "语", "態", "态", "線", "线", "項", "项", "圖", "图", "後", "后", "這", "这", "會", "会", "體", "体", "讀", "读", "標", "标", "籤", "签", "過", "过", "據", "据", "暫", "暂", "歷", "历", "長", "长", "資訊", "信息", "發", "发", "現", "现", "優", "优", "顯", "显", "個", "个", "數", "数", "複", "复", "態", "态").Replace(v)
 	}
 	merge(zhCNExtra, map[string]string{
-		"meta_description":     "OpenGraphy 是免费的 Open Graph、Twitter Card 与社交分享预览检测工具，提供 metadata 解析、平台预览、诊断报告与修复建议。",
-		"hero_eyebrow":         "Open Graph / Twitter Card / 社交预览检测",
-		"hero_title_full":      "一站式生成、检测与预览 Open Graph Meta Tags",
-		"hero_subtitle_full":   "输入网址，OpenGraphy 会从服务器端抓取网页原始 HTML，解析 Open Graph 与 Twitter Card metadata，展示各平台分享卡片，并给出可执行的修复建议。",
+		"meta_description":     "OpenGraphy 帮助网站开发者与网站拥有者预览社交媒体链接卡片、生成 Open Graph 元标签，并在链接公开前修好 metadata 问题。",
+		"hero_eyebrow":         "Open Graph 测试器 / 社交分享预览 / Meta Tags 生成",
+		"hero_title_full":      "预览网站在社交媒体上的第一印象",
+		"hero_subtitle_full":   "输入网址，立即查看你的网站在 Facebook、X、LinkedIn、Slack 和消息 App 里如何显示；生成 Open Graph 元标签，诊断 metadata 问题，并在客户分享链接前修好预览。",
 		"url_placeholder_full": "输入要检测的网址，例如 https://example.com",
 		"stats_online_full":    "人在线",
 		"stats_visits_full":    "次访问",
 		"stats_checks_full":    "次检测",
-		"mock_title":           "发布前就确认分享预览",
-		"mock_body":            "让客户在 Facebook、LinkedIn、Slack 或消息 App 里看到一致、清楚、有吸引力的链接卡片。",
+		"mock_title":           "先看到客户会看到的分享卡片",
+		"mock_body":            "用正确的标题、描述、图片与 Open Graph 标签，把普通链接变成清楚、可信、值得点击的社交预览。",
 		"preview_score":        "预览分数",
 		"checks_passed":        "项检查通过",
 		"platforms_title":      "支持链接真正会被分享出去的平台",
