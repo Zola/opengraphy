@@ -231,7 +231,9 @@ var zhTWExtra = map[string]string{
 	"terms_title": "服務條款", "terms_body": "請只檢測你有權公開訪問的網站。服務會阻擋私有網段，並保留限制濫用流量的權利。作品牆內容是公開網站預覽，未來可由管理員刷新或移除。",
 }
 
-var zhCNExtra = map[string]string{}
+var zhCNExtra = map[string]string{
+	"no_image_label": "无图片",
+}
 
 var jaExtra = map[string]string{
 	"meta_description":                   "OpenGraphy は Open Graph、Twitter Card、ソーシャルプレビューを無料で検査し、metadata 解析、各プラットフォームのプレビュー、診断、修正提案を提供します。",
@@ -329,6 +331,7 @@ var jaExtra = map[string]string{
 	"og_type_label":                      "OG タイプ",
 	"twitter_card_label":                 "Twitter Card",
 	"checked_at_label":                   "検査日時",
+	"no_image_label":                     "画像なし",
 	"all_good_title":                     "問題ありません",
 	"all_good_body":                      "主要な metadata 問題は検出されませんでした。",
 	"diag_http_status_message":           "crawler 向けの成功ステータスが返っていません。",
@@ -460,6 +463,7 @@ var koExtra = map[string]string{
 	"og_type_label":                      "OG 유형",
 	"twitter_card_label":                 "Twitter Card",
 	"checked_at_label":                   "검사 시간",
+	"no_image_label":                     "이미지 없음",
 	"all_good_title":                     "문제 없음",
 	"all_good_body":                      "주요 metadata 문제가 감지되지 않았습니다.",
 	"diag_http_status_message":           "crawler에 적합한 성공 상태가 반환되지 않았습니다.",
@@ -568,6 +572,7 @@ var esExtra = map[string]string{
 	"og_type_label":          "Tipo OG",
 	"twitter_card_label":     "Twitter Card",
 	"checked_at_label":       "Comprobado",
+	"no_image_label":         "Sin imagen",
 	"all_good_title":         "Todo bien", "all_good_body": "No se detectaron problemas importantes de metadata.",
 	"diag_http_status_message": "La página no devuelve un estado correcto para crawlers.", "diag_http_status_fix": "Asegúrate de devolver 200 OK a los crawlers sociales.",
 	"diag_redirect_chain_long_message": "La cadena de redirecciones es larga.", "diag_redirect_chain_long_fix": "Mantén las redirecciones sociales cortas y estables.",
@@ -659,6 +664,7 @@ var frExtra = map[string]string{
 	"og_type_label":          "Type OG",
 	"twitter_card_label":     "Twitter Card",
 	"checked_at_label":       "Vérifié le",
+	"no_image_label":         "Aucune image",
 	"all_good_title":         "Tout va bien", "all_good_body": "Aucun problème majeur de metadata détecté.",
 	"diag_http_status_message": "La page ne renvoie pas un statut de succès adapté aux crawlers.", "diag_http_status_fix": "Assurez-vous de renvoyer 200 OK aux crawlers sociaux.",
 	"diag_redirect_chain_long_message": "La chaîne de redirection est longue.", "diag_redirect_chain_long_fix": "Gardez les redirections sociales courtes et stables.",
@@ -750,6 +756,7 @@ var deExtra = map[string]string{
 	"og_type_label":          "OG-Typ",
 	"twitter_card_label":     "Twitter Card",
 	"checked_at_label":       "Geprüft am",
+	"no_image_label":         "Kein Bild",
 	"all_good_title":         "Alles gut", "all_good_body": "Keine größeren metadata Probleme erkannt.",
 	"diag_http_status_message": "Die Seite liefert keinen crawler-freundlichen Erfolgsstatus.", "diag_http_status_fix": "Stellen Sie sicher, dass soziale crawler 200 OK erhalten.",
 	"diag_redirect_chain_long_message": "Die Weiterleitungskette ist lang.", "diag_redirect_chain_long_fix": "Halten Sie Weiterleitungen für soziale crawler kurz und stabil.",
