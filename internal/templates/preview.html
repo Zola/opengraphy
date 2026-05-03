@@ -27,6 +27,42 @@
         <div><b>{{if .Result.Cache.Hit}}{{call .T "cached"}}{{else}}{{call .T "fresh"}}{{end}}</b><span>{{call .T "source_label"}}</span></div>
       </section>
 
+      <section class="report-grid">
+        <article class="report-card">
+          <h2>{{call .T "page_fetch_title"}}</h2>
+          <dl>
+            <div><dt>{{call .T "requested_url_label"}}</dt><dd>{{.Result.URL}}</dd></div>
+            <div><dt>{{call .T "final_url_label"}}</dt><dd>{{.Result.FinalURL}}</dd></div>
+            <div><dt>{{call .T "http_status_label"}}</dt><dd>{{.Result.Fetch.Status}}</dd></div>
+            <div><dt>{{call .T "redirects_label"}}</dt><dd>{{.Result.Fetch.Redirects}}</dd></div>
+            <div><dt>{{call .T "content_type_label"}}</dt><dd>{{if .Result.Fetch.ContentType}}{{.Result.Fetch.ContentType}}{{else}}{{call .T "unknown_label"}}{{end}}</dd></div>
+            <div><dt>{{call .T "page_size_label"}}</dt><dd>{{call .FormatBytes .Result.Fetch.PageBytes}}</dd></div>
+          </dl>
+        </article>
+        <article class="report-card">
+          <h2>{{call .T "image_check_title"}}</h2>
+          <dl>
+            <div><dt>{{call .T "image_status_label"}}</dt><dd>{{if .Result.Image.Reachable}}{{call .T "reachable_label"}}{{else}}{{call .T "not_reachable_label"}}{{end}}</dd></div>
+            <div><dt>{{call .T "http_status_label"}}</dt><dd>{{.Result.Image.Status}}</dd></div>
+            <div><dt>{{call .T "content_type_label"}}</dt><dd>{{if .Result.Image.ContentType}}{{.Result.Image.ContentType}}{{else}}{{call .T "unknown_label"}}{{end}}</dd></div>
+            <div><dt>{{call .T "image_dimensions_label"}}</dt><dd>{{call .ImageSize .Result.Image}}</dd></div>
+            <div><dt>{{call .T "image_bytes_label"}}</dt><dd>{{call .FormatBytes .Result.Image.Bytes}}</dd></div>
+            <div><dt>{{call .T "image_label"}}</dt><dd>{{if .Result.Image.URL}}{{.Result.Image.URL}}{{else}}{{call .T "unknown_label"}}{{end}}</dd></div>
+          </dl>
+        </article>
+        <article class="report-card">
+          <h2>{{call .T "metadata_summary_title"}}</h2>
+          <dl>
+            <div><dt>{{call .T "canonical_label"}}</dt><dd>{{if .Result.Meta.Canonical}}{{.Result.Meta.Canonical}}{{else}}{{call .T "unknown_label"}}{{end}}</dd></div>
+            <div><dt>{{call .T "robots_label"}}</dt><dd>{{if .Result.Meta.Robots}}{{.Result.Meta.Robots}}{{else}}{{call .T "unknown_label"}}{{end}}</dd></div>
+            <div><dt>{{call .T "favicon_label"}}</dt><dd>{{if .Result.Meta.Favicon}}{{.Result.Meta.Favicon}}{{else}}{{call .T "unknown_label"}}{{end}}</dd></div>
+            <div><dt>{{call .T "og_type_label"}}</dt><dd>{{if .Result.Meta.OG.Type}}{{.Result.Meta.OG.Type}}{{else}}{{call .T "unknown_label"}}{{end}}</dd></div>
+            <div><dt>{{call .T "twitter_card_label"}}</dt><dd>{{if .Result.Meta.Twitter.Card}}{{.Result.Meta.Twitter.Card}}{{else}}{{call .T "unknown_label"}}{{end}}</dd></div>
+            <div><dt>{{call .T "checked_at_label"}}</dt><dd>{{.Result.CheckedAt.Format "2006-01-02 15:04:05 UTC"}}</dd></div>
+          </dl>
+        </article>
+      </section>
+
       <section class="preview-grid">
         <article class="social-card facebook"><img src="{{.Result.Preview.Image}}" alt=""><small>{{.Result.Preview.Domain}}</small><h3>{{.Result.Preview.Title}}</h3><p>{{.Result.Preview.Description}}</p><b>Facebook</b></article>
         <article class="social-card whatsapp"><img src="{{.Result.Preview.Image}}" alt=""><h3>{{.Result.Preview.Title}}</h3><p>{{.Result.Preview.Description}}</p><small>{{.Result.Preview.Domain}}</small><b>WhatsApp</b></article>

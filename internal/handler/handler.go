@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"net"
 	"net/http"
@@ -54,6 +55,8 @@ type PageData struct {
 	T             func(string) string
 	DiagMessage   func(model.Diagnostic) string
 	DiagFix       func(model.Diagnostic) string
+	FormatBytes   func(int64) string
+	ImageSize     func(model.ImageInfo) string
 	URL           string
 	Result        model.CheckResult
 	Stats         stats.Snapshot
@@ -339,6 +342,13 @@ func (a *App) render(w http.ResponseWriter, r *http.Request, tmpl string, data P
 	data.T = func(key string) string { return a.I18n.T(locale, key) }
 	data.DiagMessage = func(d model.Diagnostic) string { return a.diagnosticText(locale, d, "message") }
 	data.DiagFix = func(d model.Diagnostic) string { return a.diagnosticText(locale, d, "fix") }
+	data.FormatBytes = formatBytes
+	data.ImageSize = func(image model.ImageInfo) string {
+		if image.Width <= 0 || image.Height <= 0 {
+			return a.I18n.T(locale, "unknown_label")
+		}
+		return fmt.Sprintf("%d x %d", image.Width, image.Height)
+	}
 	if data.Description == "" {
 		data.Description = a.I18n.T(locale, "meta_description")
 	}
@@ -400,6 +410,24 @@ func (a *App) localizedURL(base, path, locale string) string {
 func xmlEscape(value string) string {
 	replacer := strings.NewReplacer("&", "&amp;", "<", "&lt;", ">", "&gt;", `"`, "&quot;", "'", "&apos;")
 	return replacer.Replace(value)
+}
+
+func formatBytes(n int64) string {
+	if n <= 0 {
+		return "0 B"
+	}
+	units := []string{"B", "KB", "MB"}
+	value := float64(n)
+	for _, unit := range units {
+		if value < 1024 || unit == units[len(units)-1] {
+			if unit == "B" {
+				return fmt.Sprintf("%d %s", n, unit)
+			}
+			return fmt.Sprintf("%.1f %s", value, unit)
+		}
+		value /= 1024
+	}
+	return fmt.Sprintf("%d B", n)
 }
 
 func (a *App) locale(r *http.Request) string {
