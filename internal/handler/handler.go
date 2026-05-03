@@ -261,7 +261,7 @@ func (a *App) apiLeaderboard(w http.ResponseWriter, r *http.Request) {
 func (a *App) apiPKPair(w http.ResponseWriter, r *http.Request) {
 	left, right, err := a.Gallery.PKPair(r.Context())
 	if err != nil {
-		writeJSON(w, http.StatusNotFound, map[string]string{"error": err.Error()})
+		writeJSON(w, http.StatusOK, map[string]string{"error": err.Error()})
 		return
 	}
 	writeJSON(w, http.StatusOK, map[string]model.Work{"left": left, "right": right})
@@ -280,7 +280,11 @@ func (a *App) apiPKVote(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusBadRequest, map[string]string{"error": err.Error()})
 		return
 	}
-	left, right, _ := a.Gallery.PKPair(r.Context())
+	left, right, err := a.Gallery.PKPair(r.Context())
+	if err != nil {
+		writeJSON(w, http.StatusOK, map[string]string{"error": err.Error()})
+		return
+	}
 	writeJSON(w, http.StatusOK, map[string]model.Work{"left": left, "right": right})
 }
 
