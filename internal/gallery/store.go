@@ -99,8 +99,10 @@ func (s *Store) Upsert(ctx context.Context, result model.CheckResult) error {
 	pipe.ZAdd(ctx, "og:works:rating", redis.Z{Score: float64(w.Rating), Member: id})
 	pipe.Expire(ctx, "og:works:recent", s.ttl)
 	pipe.Expire(ctx, "og:works:rating", s.ttl)
-	_, err := pipe.Exec(ctx)
-	return err
+	if _, err := pipe.Exec(ctx); err != nil {
+		return err
+	}
+	return s.persistWork(ctx, w)
 }
 
 func (s *Store) Get(ctx context.Context, id string) (model.Work, bool) {
@@ -122,18 +124,18 @@ func (s *Store) Get(ctx context.Context, id string) (model.Work, bool) {
 
 func (s *Store) Recent(ctx context.Context, limit int) []model.Work {
 	ids := s.rdb.ZRevRange(ctx, "og:works:recent", 0, int64(limit-1)).Val()
-	return s.worksByIDs(ctx, ids, limit)
+	return mergeWorks(s.worksByIDs(ctx, ids, limit), s.recentFromDB(ctx, limit), limit)
 }
 
 func (s *Store) Leaderboard(ctx context.Context, limit int) []model.Work {
 	ids := s.rdb.ZRevRange(ctx, "og:works:rating", 0, int64(limit-1)).Val()
-	return s.worksByIDs(ctx, ids, limit)
+	return mergeWorks(s.worksByIDs(ctx, ids, limit), s.leaderboardFromDB(ctx, limit), limit)
 }
 
 func (s *Store) Random(ctx context.Context, limit int) []model.Work {
 	ids := s.rdb.ZRange(ctx, "og:works:recent", 0, -1).Val()
 	rand.Shuffle(len(ids), func(i, j int) { ids[i], ids[j] = ids[j], ids[i] })
-	return s.worksByIDs(ctx, ids, limit)
+	return mergeWorks(s.worksByIDs(ctx, ids, limit), s.randomFromDB(ctx, limit), limit)
 }
 
 func (s *Store) PKPair(ctx context.Context) (model.Work, model.Work, error) {
@@ -168,8 +170,13 @@ func (s *Store) Vote(ctx context.Context, winnerID, loserID string) error {
 	pipe := s.rdb.Pipeline()
 	pipe.ZAdd(ctx, "og:works:rating", redis.Z{Score: float64(winner.Rating), Member: winner.ID})
 	pipe.ZAdd(ctx, "og:works:rating", redis.Z{Score: float64(loser.Rating), Member: loser.ID})
-	_, err := pipe.Exec(ctx)
-	return err
+	if _, err := pipe.Exec(ctx); err != nil {
+		return err
+	}
+	if err := s.persistWork(ctx, winner); err != nil {
+		return err
+	}
+	return s.persistWork(ctx, loser)
 }
 
 func (s *Store) SyncEvery(ctx context.Context, interval time.Duration) {
@@ -237,6 +244,16 @@ func (s *Store) cacheWork(ctx context.Context, w model.Work) error {
 	return err
 }
 
+func (s *Store) persistWork(ctx context.Context, w model.Work) error {
+	_, err := s.db.ExecContext(ctx, `INSERT INTO works (id,url,final_url,domain,title,description,image,score,rating,wins,losses,first_seen,last_seen)
+	VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+	ON CONFLICT(id) DO UPDATE SET url=excluded.url, final_url=excluded.final_url, domain=excluded.domain, title=excluded.title,
+	description=excluded.description, image=excluded.image, score=excluded.score, rating=excluded.rating, wins=excluded.wins,
+	losses=excluded.losses, last_seen=excluded.last_seen`,
+		w.ID, w.URL, w.FinalURL, w.Domain, w.Title, w.Description, w.Image, w.Score, w.Rating, w.Wins, w.Losses, w.FirstSeen.Format(time.RFC3339), w.LastSeen.Format(time.RFC3339))
+	return err
+}
+
 func (s *Store) worksByIDs(ctx context.Context, ids []string, limit int) []model.Work {
 	out := make([]model.Work, 0, limit)
 	for _, id := range ids {
@@ -246,6 +263,61 @@ func (s *Store) worksByIDs(ctx context.Context, ids []string, limit int) []model
 		}
 		if len(out) >= limit {
 			break
+		}
+	}
+	return out
+}
+
+func (s *Store) recentFromDB(ctx context.Context, limit int) []model.Work {
+	return s.queryWorks(ctx, `SELECT id,url,final_url,domain,title,description,image,score,rating,wins,losses,first_seen,last_seen FROM works ORDER BY last_seen DESC LIMIT ?`, limit)
+}
+
+func (s *Store) leaderboardFromDB(ctx context.Context, limit int) []model.Work {
+	return s.queryWorks(ctx, `SELECT id,url,final_url,domain,title,description,image,score,rating,wins,losses,first_seen,last_seen FROM works ORDER BY rating DESC, last_seen DESC LIMIT ?`, limit)
+}
+
+func (s *Store) randomFromDB(ctx context.Context, limit int) []model.Work {
+	candidates := s.queryWorks(ctx, `SELECT id,url,final_url,domain,title,description,image,score,rating,wins,losses,first_seen,last_seen FROM works ORDER BY last_seen DESC LIMIT ?`, 200)
+	rand.Shuffle(len(candidates), func(i, j int) { candidates[i], candidates[j] = candidates[j], candidates[i] })
+	if len(candidates) > limit {
+		return candidates[:limit]
+	}
+	return candidates
+}
+
+func (s *Store) queryWorks(ctx context.Context, query string, limit int) []model.Work {
+	if limit <= 0 {
+		return nil
+	}
+	rows, err := s.db.QueryContext(ctx, query, limit)
+	if err != nil {
+		return nil
+	}
+	defer rows.Close()
+	out := make([]model.Work, 0, limit)
+	for rows.Next() {
+		w, err := scanWork(rows)
+		if err == nil {
+			out = append(out, w)
+			_ = s.cacheWork(ctx, w)
+		}
+	}
+	return out
+}
+
+func mergeWorks(primary, fallback []model.Work, limit int) []model.Work {
+	out := make([]model.Work, 0, limit)
+	seen := make(map[string]struct{}, limit)
+	for _, list := range [][]model.Work{primary, fallback} {
+		for _, w := range list {
+			if _, ok := seen[w.ID]; ok {
+				continue
+			}
+			seen[w.ID] = struct{}{}
+			out = append(out, w)
+			if len(out) >= limit {
+				return out
+			}
 		}
 	}
 	return out

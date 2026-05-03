@@ -2,9 +2,9 @@
 <html lang="{{.Locale}}">
 <head>
   {{template "head-meta" .}}
-  <link rel="stylesheet" href="/static/css/app.css?v=20260503-11">
-  <link rel="stylesheet" href="/static/css/tailwind.css?v=20260503-11">
-  <script defer src="/static/js/app.js?v=20260503-11"></script>
+  <link rel="stylesheet" href="/static/css/app.css?v=20260503-12">
+  <link rel="stylesheet" href="/static/css/tailwind.css?v=20260503-12">
+  <script defer src="/static/js/app.js?v=20260503-12"></script>
 </head>
 <body>
   <header class="topbar">
@@ -12,14 +12,19 @@
     <nav><a href="/">{{call .T "home"}}</a><a href="/gallery">{{call .T "gallery"}}</a></nav>
   </header>
   <main>
-    <section class="page-title"><h1>{{call .T "gallery"}}</h1><p>{{call .T "gallery_intro"}}</p></section>
-
-    <section>
-      <h2>{{call .T "recent_title"}}</h2>
+    <section class="gallery-hero">
+      <div class="gallery-header">
+        <div>
+          <p class="eyebrow">{{call .T "recent_title"}}</p>
+          <h1>{{call .T "gallery"}}</h1>
+          <p>{{call .T "gallery_intro"}}</p>
+        </div>
+        <a class="gallery-jump" href="#leaderboard">{{call .T "leaderboard_title"}}</a>
+      </div>
       <div class="work-grid">{{range .Recent}}{{template "work-card" .}}{{else}}<p class="muted">{{call .T "no_works"}}</p>{{end}}</div>
     </section>
 
-    <section class="pk-section" data-pk data-open-link="{{call .T "open_link"}}">
+    <section class="pk-section gallery-section" data-pk data-open-link="{{call .T "open_link"}}">
       <h2>{{call .T "pk_title"}}</h2>
       <div class="pk-pair">
         <article data-pk-left class="pk-card" role="button" tabindex="0">{{call .T "load_pair"}}</article>
@@ -27,12 +32,12 @@
       </div>
     </section>
 
-    <section>
+    <section class="gallery-section">
       <h2>{{call .T "random_title"}}</h2>
       <div class="work-grid">{{range .Random}}{{template "work-card" .}}{{end}}</div>
     </section>
 
-    <section>
+    <section id="leaderboard" class="gallery-section">
       <h2>{{call .T "leaderboard_title"}}</h2>
       <div class="leaderboard">{{range .Leaderboard}}{{template "leader-row" .}}{{else}}<p class="muted">{{call .T "ranking_empty"}}</p>{{end}}</div>
     </section>
