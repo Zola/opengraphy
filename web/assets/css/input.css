@@ -279,6 +279,125 @@ body {
   .gallery-section {
     @apply pt-8;
   }
+
+  .work-grid {
+    @apply grid gap-5;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  }
+
+  .work-grid.small {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  }
+
+  .work-card {
+    @apply flex h-full flex-col overflow-hidden border border-line bg-white shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-soft;
+  }
+
+  .work-card img {
+    @apply w-full bg-slate-100 object-cover;
+    aspect-ratio: 1.91 / 1;
+  }
+
+  .work-card > div {
+    @apply flex flex-1 flex-col p-4;
+  }
+
+  .work-card small {
+    @apply truncate text-[11px] font-extrabold uppercase text-slate-500;
+  }
+
+  .work-card h3 {
+    @apply mt-2 line-clamp-2 h-auto text-base font-extrabold leading-snug text-ink;
+  }
+
+  .work-card p {
+    @apply mt-2 line-clamp-3 h-auto flex-1 text-sm leading-relaxed text-slate-600;
+  }
+
+  .work-card .work-url {
+    @apply mt-4 inline-flex min-w-0 items-center rounded-lg bg-blue-50 px-3 py-2 text-sm font-extrabold text-brand transition hover:bg-blue-100;
+  }
+
+  .pk-section {
+    @apply bg-white;
+    background:
+      linear-gradient(135deg, rgba(0, 168, 143, 0.08) 0%, transparent 42%),
+      linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+  }
+
+  .pk-section h2,
+  .gallery-section h2 {
+    @apply text-3xl font-black tracking-normal text-ink;
+  }
+
+  .pk-pair {
+    @apply grid grid-cols-2 gap-6;
+  }
+
+  .pk-card {
+    @apply relative overflow-hidden border border-line bg-white text-left text-ink shadow-panel transition hover:-translate-y-1 hover:border-emerald-200 hover:shadow-soft focus:outline-none focus:ring-4 focus:ring-emerald-100;
+  }
+
+  .pk-card::after {
+    content: "";
+    @apply pointer-events-none absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-brand to-emerald-500 opacity-0 transition;
+  }
+
+  .pk-card:hover::after,
+  .pk-card:focus::after {
+    @apply opacity-100;
+  }
+
+  .pk-card img {
+    @apply w-full bg-slate-100 object-cover;
+    aspect-ratio: 1.91 / 1;
+  }
+
+  .pk-card > div {
+    @apply p-5;
+  }
+
+  .pk-card small {
+    @apply block truncate text-[11px] font-extrabold uppercase tracking-wide text-slate-500;
+  }
+
+  .pk-card h3 {
+    @apply mt-2 line-clamp-2 text-xl font-black leading-tight text-ink;
+  }
+
+  .pk-card p {
+    @apply mt-2 line-clamp-3 text-sm leading-relaxed text-slate-600;
+  }
+
+  .pk-visit-link {
+    @apply mt-4 inline-flex max-w-full rounded-lg bg-emerald-50 px-3 py-2 text-sm font-extrabold text-emerald-700 transition hover:bg-emerald-100;
+  }
+
+  .leaderboard {
+    @apply grid gap-3;
+  }
+
+  .leader-row {
+    @apply grid items-center gap-4 border border-line bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-panel;
+    grid-template-columns: 104px minmax(0, 1fr) 96px;
+  }
+
+  .leader-row img {
+    @apply w-full rounded-md bg-slate-100 object-cover;
+    aspect-ratio: 1.91 / 1;
+  }
+
+  .leader-row h3 {
+    @apply line-clamp-1 text-base font-extrabold text-ink;
+  }
+
+  .leader-row small {
+    @apply mt-1 block truncate text-xs font-bold uppercase tracking-wide text-slate-500;
+  }
+
+  .leader-row strong {
+    @apply text-right text-2xl font-black text-brand;
+  }
 }
 
 @media (max-width: 900px) {
@@ -375,6 +494,23 @@ body {
 
   .gallery-jump {
     @apply mt-4 inline-flex w-full justify-center;
+  }
+
+  .pk-pair {
+    @apply grid-cols-1;
+  }
+
+  .pk-section h2,
+  .gallery-section h2 {
+    @apply text-2xl;
+  }
+
+  .leader-row {
+    grid-template-columns: 78px minmax(0, 1fr) 64px;
+  }
+
+  .leader-row strong {
+    @apply text-xl;
   }
 }
 
