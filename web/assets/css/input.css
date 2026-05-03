@@ -1,0 +1,104 @@
+@tailwind components;
+@tailwind utilities;
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: #dbeafe;
+  color: #182033;
+}
+
+@layer components {
+  .topbar {
+    @apply bg-white/95 backdrop-blur;
+  }
+
+  .brand-mark {
+    @apply shadow-panel;
+  }
+
+  .hero {
+    @apply relative overflow-hidden;
+    background:
+      radial-gradient(circle at 22% 16%, rgba(36, 88, 255, 0.10), transparent 34%),
+      linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  }
+
+  .hero h1 {
+    @apply tracking-normal;
+  }
+
+  .lead {
+    @apply text-slate-600;
+  }
+
+  .check-form input,
+  .meta-editor input,
+  .meta-editor textarea {
+    @apply shadow-sm transition focus:border-brand focus:outline-none focus:ring-4 focus:ring-blue-100;
+  }
+
+  .check-form button,
+  .code-box button,
+  .consent button {
+    @apply shadow-panel transition hover:-translate-y-0.5 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-100 active:translate-y-0;
+  }
+
+  .browser-card,
+  .work-card,
+  .report-card,
+  .social-card,
+  .meta-editor,
+  .code-box,
+  .diagnostics,
+  .error-box,
+  .legal,
+  .page-title {
+    @apply shadow-panel;
+  }
+
+  .platform-grid article,
+  .article-grid article,
+  .note-grid article,
+  .framework-grid article,
+  .faq-list article,
+  .score-strip div,
+  .leader-row {
+    @apply shadow-sm transition hover:-translate-y-0.5 hover:shadow-panel;
+  }
+
+  .url-ribbon {
+    background: linear-gradient(90deg, #2458ff 0%, #3357f6 52%, #00a88f 100%);
+  }
+
+  .report-card dt,
+  .work-card small,
+  .social-card small {
+    @apply tracking-wide;
+  }
+
+  .preview-placeholder {
+    @apply text-slate-500;
+  }
+
+  .diag-list article {
+    @apply shadow-sm;
+  }
+
+  .consent {
+    @apply bg-white/95 backdrop-blur;
+  }
+}
+
+@supports (backdrop-filter: blur(12px)) {
+  .topbar {
+    background-color: rgb(255 255 255 / 0.92);
+  }
+
+  .consent {
+    background-color: rgb(255 255 255 / 0.95);
+  }
+}

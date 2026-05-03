@@ -11,3 +11,4 @@ panel.png
 *.db-wal
 dist
 tmp
+node_modules

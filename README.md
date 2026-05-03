@@ -29,6 +29,19 @@ docker compose up --build
 
 Then open the service through the configured reverse proxy / Nginx container.
 
+## Frontend CSS
+
+The app uses Tailwind CSS as a compiled enhancement layer on top of the existing semantic CSS. Production does not need Node: the generated file is committed at `web/static/css/tailwind.css`.
+
+After changing `web/assets/css/input.css` or Tailwind config, rebuild CSS:
+
+```bash
+npm install
+npm run build:css
+```
+
+When CSS changes, bump the query-string version in templates so `/static` long-cache clients receive the new file.
+
 ## Environment
 
 Copy `.env.example` to `.env` and set:
