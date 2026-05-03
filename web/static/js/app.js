@@ -48,8 +48,18 @@ const langForm = $('[data-lang-form]');
 if (langForm) {
   langForm.addEventListener('change', async () => {
     const form = new FormData(langForm);
-    await fetch('/api/lang', {method: 'POST', headers: {'accept': 'application/json'}, body: form});
-    location.reload();
+    try {
+      const response = await fetch('/api/lang', {
+        method: 'POST',
+        headers: {'Accept': 'application/json'},
+        credentials: 'same-origin',
+        body: form
+      });
+      if (!response.ok) throw new Error('language switch failed');
+      location.reload();
+    } catch (_) {
+      langForm.submit();
+    }
   });
 }
 

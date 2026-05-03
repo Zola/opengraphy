@@ -12,28 +12,28 @@
   </header>
   <main>
     <section class="page-title admin-title">
-      <p class="eyebrow">Admin</p>
-      <h1>Gallery maintenance</h1>
-      <p class="muted">Private controls for checking gallery persistence and removing works from the public wall.</p>
+      <p class="eyebrow">{{call .T "admin_eyebrow"}}</p>
+      <h1>{{call .T "admin_gallery_title"}}</h1>
+      <p class="muted">{{call .T "admin_gallery_body"}}</p>
     </section>
 
     <section class="admin-panel">
       {{if .Error}}<p class="admin-status">{{.Error}}</p>{{end}}
       <div class="admin-health">
-        <article><span>Redis recent</span><strong>{{.GalleryHealth.RedisRecent}}</strong></article>
-        <article><span>SQLite works</span><strong>{{.GalleryHealth.SQLiteWorks}}</strong></article>
-        <article><span>Total</span><strong>{{.GalleryHealth.Total}}</strong></article>
+        <article><span>{{call .T "admin_redis_recent"}}</span><strong>{{.GalleryHealth.RedisRecent}}</strong></article>
+        <article><span>{{call .T "admin_sqlite_works"}}</span><strong>{{.GalleryHealth.SQLiteWorks}}</strong></article>
+        <article><span>{{call .T "admin_total"}}</span><strong>{{.GalleryHealth.Total}}</strong></article>
       </div>
       <div class="admin-actions">
-        <form method="post" action="/admin/gallery/sync"><button type="submit">Sync Redis to SQLite</button></form>
-        <form method="post" action="/admin/gallery/seed"><button type="submit">Seed if empty</button></form>
+        <form method="post" action="/admin/gallery/sync"><button type="submit">{{call .T "admin_sync"}}</button></form>
+        <form method="post" action="/admin/gallery/seed"><button type="submit">{{call .T "admin_seed"}}</button></form>
       </div>
     </section>
 
     <section class="admin-panel">
       <div class="section-head">
-        <h2>Works</h2>
-        <a href="/gallery" target="_blank" rel="noopener noreferrer">Open public gallery</a>
+        <h2>{{call .T "admin_works"}}</h2>
+        <a href="/gallery" target="_blank" rel="noopener noreferrer">{{call .T "admin_open_gallery"}}</a>
       </div>
       <div class="admin-work-list">
         {{range .AdminWorks}}
@@ -45,13 +45,13 @@
             <p>{{.Description}}</p>
             <a href="{{.FinalURL}}" target="_blank" rel="noopener noreferrer">{{.FinalURL}}</a>
           </div>
-          <form method="post" action="/admin/gallery/remove" onsubmit="return confirm('Remove this work from the public gallery?')">
+          <form method="post" action="/admin/gallery/remove" onsubmit="return confirm('{{call .T "admin_remove_confirm"}}')">
             <input type="hidden" name="id" value="{{.ID}}">
-            <button type="submit">Remove</button>
+            <button type="submit">{{call .T "admin_remove"}}</button>
           </form>
         </article>
         {{else}}
-        <p class="muted">No works found.</p>
+        <p class="muted">{{call .T "admin_no_works"}}</p>
         {{end}}
       </div>
     </section>
