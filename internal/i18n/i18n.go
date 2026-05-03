@@ -464,6 +464,9 @@ func (b *Bundle) T(locale, key string) string {
 }
 
 func (b *Bundle) Locale(r *http.Request) string {
+	if locale := strings.TrimSpace(r.URL.Query().Get("lang")); b.Has(locale) {
+		return locale
+	}
 	if c, err := r.Cookie("lang"); err == nil && b.Has(c.Value) {
 		return c.Value
 	}

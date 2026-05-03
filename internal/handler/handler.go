@@ -41,19 +41,24 @@ type App struct {
 }
 
 type PageData struct {
-	Template     string
-	Title        string
-	Locale       string
-	Locales      []string
-	LocaleLabels map[string]string
-	T            func(string) string
-	URL          string
-	Result       model.CheckResult
-	Stats        stats.Snapshot
-	Recent       []model.Work
-	Random       []model.Work
-	Leaderboard  []model.Work
-	Error        string
+	Template      string
+	Title         string
+	Description   string
+	CanonicalURL  string
+	DefaultURL    string
+	AlternateURLs map[string]string
+	NoIndex       bool
+	Locale        string
+	Locales       []string
+	LocaleLabels  map[string]string
+	T             func(string) string
+	URL           string
+	Result        model.CheckResult
+	Stats         stats.Snapshot
+	Recent        []model.Work
+	Random        []model.Work
+	Leaderboard   []model.Work
+	Error         string
 }
 
 func (a *App) Routes() http.Handler {
@@ -104,8 +109,9 @@ func (a *App) home(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) gallery(w http.ResponseWriter, r *http.Request) {
+	locale := a.locale(r)
 	a.render(w, r, "gallery.html", PageData{
-		Title:       "Gallery - OpenGraphy",
+		Title:       a.I18n.T(locale, "gallery") + " - OpenGraphy",
 		Recent:      a.Gallery.Recent(r.Context(), 8),
 		Random:      a.Gallery.Random(r.Context(), 20),
 		Leaderboard: a.Gallery.Leaderboard(r.Context(), 20),
@@ -124,7 +130,7 @@ func (a *App) previewPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	result, err := a.check(r.Context(), r, rawURL, r.URL.Query().Get("refresh") == "1")
-	data := PageData{Title: "Preview - OpenGraphy", URL: rawURL}
+	data := PageData{Title: "Preview - OpenGraphy", URL: rawURL, NoIndex: true}
 	if err != nil {
 		data.Error = err.Error()
 	} else {
@@ -275,6 +281,13 @@ func (a *App) apiPKVote(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) staticPage(name, title string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		locale := a.locale(r)
+		if name == "privacy.html" {
+			title = a.I18n.T(locale, "privacy_title")
+		}
+		if name == "terms.html" {
+			title = a.I18n.T(locale, "terms_title")
+		}
 		a.render(w, r, name, PageData{Title: title + " - OpenGraphy"})
 	}
 }
@@ -285,22 +298,86 @@ func (a *App) robots(w http.ResponseWriter, _ *http.Request) {
 }
 
 func (a *App) sitemap(w http.ResponseWriter, _ *http.Request) {
-	w.Header().Set("Content-Type", "application/xml")
+	w.Header().Set("Content-Type", "application/xml; charset=utf-8")
 	base := strings.TrimRight(a.Config.PublicBaseURL, "/")
-	_, _ = w.Write([]byte(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>` + base + `</loc></url><url><loc>` + base + `/gallery</loc></url><url><loc>` + base + `/privacy</loc></url></urlset>`))
+	paths := []string{"/", "/gallery", "/privacy", "/terms"}
+	locales := a.I18n.Locales()
+	var b strings.Builder
+	b.WriteString(`<?xml version="1.0" encoding="UTF-8"?>`)
+	b.WriteString(`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">`)
+	for _, path := range paths {
+		for _, locale := range locales {
+			loc := a.localizedURL(base, path, locale)
+			b.WriteString(`<url><loc>`)
+			b.WriteString(xmlEscape(loc))
+			b.WriteString(`</loc>`)
+			for _, alternate := range locales {
+				b.WriteString(`<xhtml:link rel="alternate" hreflang="`)
+				b.WriteString(xmlEscape(alternate))
+				b.WriteString(`" href="`)
+				b.WriteString(xmlEscape(a.localizedURL(base, path, alternate)))
+				b.WriteString(`"/>`)
+			}
+			b.WriteString(`<xhtml:link rel="alternate" hreflang="x-default" href="`)
+			b.WriteString(xmlEscape(a.absoluteURL(base, path)))
+			b.WriteString(`"/></url>`)
+		}
+	}
+	b.WriteString(`</urlset>`)
+	_, _ = w.Write([]byte(b.String()))
 }
 
 func (a *App) render(w http.ResponseWriter, r *http.Request, tmpl string, data PageData) {
 	locale := a.locale(r)
+	base := strings.TrimRight(a.Config.PublicBaseURL, "/")
 	data.Template = tmpl
 	data.Locale = locale
 	data.Locales = a.I18n.Locales()
 	data.LocaleLabels = a.I18n.LocaleLabels()
 	data.T = func(key string) string { return a.I18n.T(locale, key) }
+	if data.Description == "" {
+		data.Description = a.I18n.T(locale, "meta_description")
+	}
+	path := r.URL.Path
+	if path == "" {
+		path = "/"
+	}
+	if data.CanonicalURL == "" {
+		if r.URL.Query().Get("lang") != "" {
+			data.CanonicalURL = a.localizedURL(base, path, locale)
+		} else {
+			data.CanonicalURL = a.absoluteURL(base, path)
+		}
+	}
+	if data.DefaultURL == "" {
+		data.DefaultURL = a.absoluteURL(base, path)
+	}
+	if !data.NoIndex && data.AlternateURLs == nil {
+		data.AlternateURLs = make(map[string]string, len(data.Locales))
+		for _, alternate := range data.Locales {
+			data.AlternateURLs[alternate] = a.localizedURL(base, path, alternate)
+		}
+	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	if err := a.templates.ExecuteTemplate(w, tmpl, data); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+}
+
+func (a *App) absoluteURL(base, path string) string {
+	if path == "/" {
+		return base + "/"
+	}
+	return base + path
+}
+
+func (a *App) localizedURL(base, path, locale string) string {
+	return a.absoluteURL(base, path) + "?lang=" + url.QueryEscape(locale)
+}
+
+func xmlEscape(value string) string {
+	replacer := strings.NewReplacer("&", "&amp;", "<", "&lt;", ">", "&gt;", `"`, "&quot;", "'", "&apos;")
+	return replacer.Replace(value)
 }
 
 func (a *App) locale(r *http.Request) string {

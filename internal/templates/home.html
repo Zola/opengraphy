@@ -1,10 +1,7 @@
 <!doctype html>
 <html lang="{{.Locale}}">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{.Title}}</title>
-  <meta name="description" content='{{call .T "meta_description"}}'>
+  {{template "head-meta" .}}
   <link rel="stylesheet" href="/static/css/app.css?v=20260503-6">
   <script defer src="/static/js/app.js?v=20260503-6"></script>
 </head>
