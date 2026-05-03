@@ -14,6 +14,10 @@
   <meta name="twitter:card" content="summary_large_image">
 {{end}}
 
+{{define "preview-media"}}
+  {{if .Result.Preview.Image}}<img src="{{.Result.Preview.Image}}" alt="">{{else}}<div class="preview-placeholder" role="img" aria-label="{{call .T "no_image_label"}}"><span>{{call .T "no_image_label"}}</span></div>{{end}}
+{{end}}
+
 {{define "work-card"}}
 <article class="work-card" data-id="{{.ID}}">
   <img src="{{.Image}}" alt="">

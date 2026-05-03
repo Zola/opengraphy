@@ -64,12 +64,12 @@
       </section>
 
       <section class="preview-grid">
-        <article class="social-card facebook"><img src="{{.Result.Preview.Image}}" alt=""><small>{{.Result.Preview.Domain}}</small><h3>{{.Result.Preview.Title}}</h3><p>{{.Result.Preview.Description}}</p><b>Facebook</b></article>
-        <article class="social-card whatsapp"><img src="{{.Result.Preview.Image}}" alt=""><h3>{{.Result.Preview.Title}}</h3><p>{{.Result.Preview.Description}}</p><small>{{.Result.Preview.Domain}}</small><b>WhatsApp</b></article>
-        <article class="social-card twitter"><img src="{{.Result.Preview.Image}}" alt=""><h3>{{.Result.Preview.Title}}</h3><p>{{.Result.Preview.Description}}</p><small>{{.Result.Preview.Domain}}</small><b>X / Twitter</b></article>
-        <article class="social-card discord"><small>{{.Result.Preview.Domain}}</small><h3>{{.Result.Preview.Title}}</h3><p>{{.Result.Preview.Description}}</p><img src="{{.Result.Preview.Image}}" alt=""><b>Discord</b></article>
-        <article class="social-card linkedin"><img src="{{.Result.Preview.Image}}" alt=""><h3>{{.Result.Preview.Title}}</h3><p>{{.Result.Preview.Description}}</p><small>{{.Result.Preview.Domain}}</small><b>LinkedIn</b></article>
-        <article class="social-card pinterest"><img src="{{.Result.Preview.Image}}" alt=""><h3>{{.Result.Preview.Title}}</h3><b>Pinterest</b></article>
+        <article class="social-card facebook">{{template "preview-media" .}}<small>{{.Result.Preview.Domain}}</small><h3>{{.Result.Preview.Title}}</h3><p>{{.Result.Preview.Description}}</p><b>Facebook</b></article>
+        <article class="social-card whatsapp">{{template "preview-media" .}}<h3>{{.Result.Preview.Title}}</h3><p>{{.Result.Preview.Description}}</p><small>{{.Result.Preview.Domain}}</small><b>WhatsApp</b></article>
+        <article class="social-card twitter">{{template "preview-media" .}}<h3>{{.Result.Preview.Title}}</h3><p>{{.Result.Preview.Description}}</p><small>{{.Result.Preview.Domain}}</small><b>X / Twitter</b></article>
+        <article class="social-card discord"><small>{{.Result.Preview.Domain}}</small><h3>{{.Result.Preview.Title}}</h3><p>{{.Result.Preview.Description}}</p>{{template "preview-media" .}}<b>Discord</b></article>
+        <article class="social-card linkedin">{{template "preview-media" .}}<h3>{{.Result.Preview.Title}}</h3><p>{{.Result.Preview.Description}}</p><small>{{.Result.Preview.Domain}}</small><b>LinkedIn</b></article>
+        <article class="social-card pinterest">{{template "preview-media" .}}<h3>{{.Result.Preview.Title}}</h3><b>Pinterest</b></article>
       </section>
 
       <section class="panel-two">
