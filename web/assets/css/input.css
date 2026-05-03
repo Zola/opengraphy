@@ -21,18 +21,35 @@ body {
   }
 
   .hero {
-    @apply relative overflow-hidden;
+    @apply relative grid items-center overflow-hidden bg-white;
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 0.85fr);
+    gap: clamp(2.25rem, 5vw, 4.5rem);
+    padding: clamp(4.5rem, 7vw, 6.25rem) clamp(1.25rem, 5vw, 4.5rem) clamp(3.75rem, 6vw, 5rem);
     background:
-      radial-gradient(circle at 22% 16%, rgba(36, 88, 255, 0.10), transparent 34%),
+      linear-gradient(135deg, rgba(36, 88, 255, 0.08) 0%, transparent 34%),
       linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
   }
 
+  .hero-copy {
+    @apply relative z-10;
+  }
+
+  .eyebrow {
+    @apply inline-flex max-w-full rounded-full border border-blue-100 bg-white/80 px-3 py-1 text-xs font-extrabold uppercase leading-snug text-brand shadow-sm;
+  }
+
   .hero h1 {
-    @apply tracking-normal;
+    @apply max-w-3xl font-black tracking-normal text-ink;
+    font-size: clamp(2.75rem, 6vw, 4.75rem);
+    line-height: 0.96;
   }
 
   .lead {
-    @apply text-slate-600;
+    @apply max-w-2xl text-xl leading-relaxed text-slate-600;
+  }
+
+  .check-form {
+    @apply mt-7 flex max-w-2xl gap-2.5;
   }
 
   .check-form input,
@@ -45,6 +62,48 @@ body {
   .code-box button,
   .consent button {
     @apply shadow-panel transition hover:-translate-y-0.5 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-100 active:translate-y-0;
+  }
+
+  .check-form input {
+    @apply h-14 rounded-lg border-line bg-slate-50 px-5;
+  }
+
+  .check-form button {
+    @apply h-14 rounded-lg px-6 font-extrabold;
+  }
+
+  .stats-row {
+    @apply mt-5 flex gap-3 text-muted;
+  }
+
+  .stats-row span {
+    @apply rounded-lg border border-line bg-white/70 px-4 py-3 shadow-sm;
+  }
+
+  .stats-row strong {
+    @apply text-ink;
+  }
+
+  .hero-panel {
+    @apply min-h-0;
+  }
+
+  .browser-card {
+    @apply border border-line bg-white shadow-soft;
+  }
+
+  .mock-preview {
+    @apply border border-line bg-white shadow-sm;
+  }
+
+  .mock-image {
+    background:
+      linear-gradient(135deg, rgba(0, 168, 143, 0.14), rgba(36, 88, 255, 0.12) 58%, rgba(255, 255, 255, 0.96));
+  }
+
+  .mini-report {
+    @apply shadow-panel;
+    background: linear-gradient(135deg, #101624 0%, #17213a 100%);
   }
 
   .browser-card,
@@ -90,6 +149,59 @@ body {
 
   .consent {
     @apply bg-white/95 backdrop-blur;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    @apply grid-cols-1 items-start;
+    gap: 2.125rem;
+    padding-top: 2.75rem;
+  }
+
+  .browser-card {
+    @apply max-w-2xl;
+  }
+}
+
+@media (max-width: 620px) {
+  .hero {
+    gap: 1.75rem;
+    padding: 2.125rem 1.25rem 2.5rem;
+  }
+
+  .eyebrow {
+    @apply rounded-lg px-2.5 py-1 text-[11px];
+  }
+
+  .hero h1 {
+    font-size: clamp(2.125rem, 10.5vw, 2.625rem);
+    line-height: 1.02;
+  }
+
+  .lead {
+    @apply text-[17px] leading-relaxed;
+  }
+
+  .check-form {
+    @apply grid max-w-none gap-2.5;
+  }
+
+  .check-form input,
+  .check-form button {
+    @apply w-full;
+  }
+
+  .stats-row {
+    @apply grid grid-cols-3 gap-2;
+  }
+
+  .stats-row span {
+    @apply px-2 py-2 text-center text-xs;
+  }
+
+  .stats-row strong {
+    @apply block text-xl;
   }
 }
 
