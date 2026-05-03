@@ -61,8 +61,15 @@ document.addEventListener('error', (event) => {
   img.removeAttribute('src');
 }, true);
 
+let pkVotes = 0;
+let pkLocked = false;
+let nextPair = null;
+let pkFinished = false;
+
 function renderPKCard(button, work, side) {
   button.dataset.id = work.id;
+  button.classList.remove('pk-winner', 'pk-loser', 'pk-loading');
+  button.setAttribute('aria-disabled', 'false');
   const visitURL = work.final_url || work.url || '';
   const openLabel = $('[data-open-link]')?.dataset.openLink || 'Open';
   button.innerHTML = `<img src="${escapeAttr(work.image)}" alt=""><div><small>${escapeHTML(work.domain)}</small><h3>${escapeHTML(work.title)}</h3><p>${escapeHTML(work.description || '')}</p><a class="pk-visit-link" href="${escapeAttr(visitURL)}" target="_blank" rel="noopener noreferrer" title="${escapeAttr(openLabel)} ${escapeAttr(visitURL)}">${escapeHTML(work.domain || visitURL)}</a></div>`;
@@ -78,31 +85,141 @@ function renderPKCard(button, work, side) {
   };
 }
 
-async function loadPair() {
+function pkSection() {
+  return $('[data-pk]');
+}
+
+function setPKStatus(message, mode = 'notice') {
+  const section = pkSection();
+  const status = $('[data-pk-status]');
+  const text = $('[data-pk-message]');
+  if (!section || !status || !text) return;
+  section.dataset.pkMode = mode;
+  text.textContent = message || '';
+  status.hidden = !message;
+}
+
+function clearPKStatus() {
+  setPKStatus('');
+}
+
+function setPKDisabled(disabled) {
+  const left = $('[data-pk-left]');
+  const right = $('[data-pk-right]');
+  for (const card of [left, right]) {
+    if (!card) continue;
+    card.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+  }
+}
+
+async function fetchPair() {
+  return fetch('/api/pk/pair').then(r => r.json()).catch(() => null);
+}
+
+function showPair(pair) {
   const left = $('[data-pk-left]');
   const right = $('[data-pk-right]');
   if (!left || !right) return;
-  const pair = await fetch('/api/pk/pair').then(r => r.json()).catch(() => null);
-  if (!pair || pair.error) return;
+  if (!pair || pair.error) {
+    const section = pkSection();
+    setPKStatus(section?.dataset.pkError || 'Not enough works yet.', 'paused');
+    return;
+  }
   renderPKCard(left, pair.left, 'left');
   renderPKCard(right, pair.right, 'right');
+  setPKDisabled(false);
+}
+
+async function loadPair() {
+  showPair(nextPair || await fetchPair());
+  nextPair = null;
 }
 
 async function vote(side) {
+  if (pkLocked || pkFinished) return;
   const left = $('[data-pk-left]');
   const right = $('[data-pk-right]');
+  const section = pkSection();
+  if (!left || !right || !left.dataset.id || !right.dataset.id) return;
   const winner = side === 'left' ? left.dataset.id : right.dataset.id;
   const loser = side === 'left' ? right.dataset.id : left.dataset.id;
-  const pair = await fetch('/api/pk/vote', {
+  const winnerCard = side === 'left' ? left : right;
+  const loserCard = side === 'left' ? right : left;
+
+  pkLocked = true;
+  clearPKStatus();
+  setPKDisabled(true);
+  winnerCard.classList.add('pk-winner');
+  loserCard.classList.add('pk-loser');
+
+  const pairRequest = fetch('/api/pk/vote', {
     method: 'POST',
     headers: {'content-type': 'application/json'},
     body: JSON.stringify({winner, loser})
   }).then(r => r.json()).catch(() => null);
-  if (pair && !pair.error) {
-    renderPKCard(left, pair.left, 'left');
-    renderPKCard(right, pair.right, 'right');
-  }
+
+  setTimeout(async () => {
+    pkVotes++;
+    nextPair = await pairRequest;
+    winnerCard.classList.remove('pk-winner');
+    loserCard.classList.remove('pk-loser');
+
+    if (!nextPair || nextPair.error) {
+      pkLocked = false;
+      setPKStatus(section?.dataset.pkError || 'Not enough works yet.', 'paused');
+      return;
+    }
+
+    if (pkVotes >= 30) {
+      pkFinished = true;
+      pkLocked = false;
+      setPKDisabled(true);
+      setPKStatus(section?.dataset.pkFinished || 'Thanks for playing.', 'finished');
+      return;
+    }
+
+    if (pkVotes === 10) {
+      pkLocked = false;
+      setPKStatus(section?.dataset.pkTen || 'Keep going or view the leaderboard.', 'paused');
+      return;
+    }
+
+    if (pkVotes === 5) {
+      setPKStatus(section?.dataset.pkEncourage || 'Nice picks. Keep going!', 'notice');
+    }
+
+    showPair(nextPair);
+    nextPair = null;
+    pkLocked = false;
+  }, 400);
 }
+
+const pkContinue = $('[data-pk-continue]');
+if (pkContinue) {
+  pkContinue.addEventListener('click', () => {
+    if (pkFinished) return;
+    clearPKStatus();
+    loadPair();
+    pkLocked = false;
+  });
+}
+
+const pkLeaderboard = $('[data-pk-leaderboard]');
+if (pkLeaderboard) {
+  pkLeaderboard.addEventListener('click', () => {
+    const target = $('#leaderboard');
+    if (target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
+  });
+}
+
+document.addEventListener('click', event => {
+  const card = event.target.closest('.work-card');
+  if (!card || event.target.closest('a')) return;
+  const section = pkSection();
+  if (section) {
+    section.scrollIntoView({behavior: 'smooth', block: 'start'});
+  }
+});
 loadPair();
 
 function escapeHTML(value) {

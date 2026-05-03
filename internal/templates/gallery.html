@@ -2,9 +2,9 @@
 <html lang="{{.Locale}}">
 <head>
   {{template "head-meta" .}}
-  <link rel="stylesheet" href="/static/css/app.css?v=20260503-14">
-  <link rel="stylesheet" href="/static/css/tailwind.css?v=20260503-14">
-  <script defer src="/static/js/app.js?v=20260503-14"></script>
+  <link rel="stylesheet" href="/static/css/app.css?v=20260503-15">
+  <link rel="stylesheet" href="/static/css/tailwind.css?v=20260503-15">
+  <script defer src="/static/js/app.js?v=20260503-15"></script>
 </head>
 <body>
   <header class="topbar">
@@ -24,8 +24,16 @@
       <div class="work-grid">{{range .Recent}}{{template "work-card" .}}{{else}}<p class="muted">{{call .T "no_works"}}</p>{{end}}</div>
     </section>
 
-    <section class="pk-section gallery-section" data-pk data-open-link="{{call .T "open_link"}}">
+    <section class="pk-section gallery-section" data-pk data-open-link="{{call .T "open_link"}}" data-pk-encourage="{{call .T "pk_encourage"}}" data-pk-ten="{{call .T "pk_ten"}}" data-pk-finished="{{call .T "pk_finished"}}" data-pk-error="{{call .T "pk_error"}}">
       <h2>{{call .T "pk_title"}}</h2>
+      <p class="pk-helper" data-pk-helper>{{call .T "pk_helper"}}</p>
+      <div class="pk-status" data-pk-status hidden>
+        <strong data-pk-message></strong>
+        <div>
+          <button type="button" data-pk-continue>{{call .T "pk_continue"}}</button>
+          <a href="#leaderboard" data-pk-leaderboard>{{call .T "pk_view_leaderboard"}}</a>
+        </div>
+      </div>
       <div class="pk-pair">
         <article data-pk-left class="pk-card" role="button" tabindex="0">{{call .T "load_pair"}}</article>
         <article data-pk-right class="pk-card" role="button" tabindex="0">{{call .T "load_pair"}}</article>
