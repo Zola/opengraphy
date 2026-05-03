@@ -25,6 +25,12 @@ type Store struct {
 	ttl time.Duration
 }
 
+type Health struct {
+	RedisRecent int64 `json:"redis_recent"`
+	SQLiteWorks int64 `json:"sqlite_works"`
+	Total       int64 `json:"total"`
+}
+
 func NewStore(path string, rdb *redis.Client, ttl time.Duration) (*Store, error) {
 	if dir := filepath.Dir(path); dir != "." && dir != "" {
 		_ = os.MkdirAll(dir, 0755)
@@ -144,6 +150,37 @@ func (s *Store) PKPair(ctx context.Context) (model.Work, model.Work, error) {
 		return model.Work{}, model.Work{}, errors.New("not enough works")
 	}
 	return items[0], items[1], nil
+}
+
+func (s *Store) Health(ctx context.Context) Health {
+	sqliteWorks := s.countDB(ctx)
+	redisRecent := s.rdb.ZCard(ctx, "og:works:recent").Val()
+	total := sqliteWorks
+	if redisRecent > total {
+		total = redisRecent
+	}
+	return Health{RedisRecent: redisRecent, SQLiteWorks: sqliteWorks, Total: total}
+}
+
+func (s *Store) Count(ctx context.Context) int64 {
+	return s.Health(ctx).Total
+}
+
+func (s *Store) SeedDefaultsIfEmpty(ctx context.Context) error {
+	if s.Count(ctx) > 0 {
+		return nil
+	}
+	now := time.Now().UTC()
+	for i, w := range defaultWorks(now) {
+		w.LastSeen = now.Add(time.Duration(i) * time.Second)
+		if err := s.persistWork(ctx, w); err != nil {
+			return err
+		}
+		if err := s.cacheWork(ctx, w); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (s *Store) Vote(ctx context.Context, winnerID, loserID string) error {
@@ -303,6 +340,12 @@ func (s *Store) queryWorks(ctx context.Context, query string, limit int) []model
 		}
 	}
 	return out
+}
+
+func (s *Store) countDB(ctx context.Context) int64 {
+	var count int64
+	_ = s.db.QueryRowContext(ctx, `SELECT COUNT(*) FROM works`).Scan(&count)
+	return count
 }
 
 func mergeWorks(primary, fallback []model.Work, limit int) []model.Work {

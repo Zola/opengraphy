@@ -92,6 +92,7 @@ func (a *App) Routes() http.Handler {
 	r.Get("/api/gallery/recent", a.apiRecent)
 	r.Get("/api/gallery/random", a.apiRandom)
 	r.Get("/api/gallery/leaderboard", a.apiLeaderboard)
+	r.Get("/api/gallery/health", a.apiGalleryHealth)
 	r.Get("/api/pk/pair", a.apiPKPair)
 	r.Post("/api/pk/vote", a.apiPKVote)
 	r.Get("/privacy", a.staticPage("privacy.html", "Privacy"))
@@ -107,7 +108,7 @@ func (a *App) home(w http.ResponseWriter, r *http.Request) {
 	a.Stats.Visit(r.Context(), locale)
 	a.render(w, r, "home.html", PageData{
 		Title:       "OpenGraphy",
-		Stats:       a.Stats.Snapshot(r.Context()),
+		Stats:       a.statsSnapshot(r.Context()),
 		Recent:      a.Gallery.Recent(r.Context(), 8),
 		Leaderboard: a.Gallery.Leaderboard(r.Context(), 6),
 	})
@@ -218,7 +219,7 @@ func (a *App) check(ctx context.Context, r *http.Request, rawURL string, refresh
 }
 
 func (a *App) apiStats(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, http.StatusOK, a.Stats.Snapshot(r.Context()))
+	writeJSON(w, http.StatusOK, a.statsSnapshot(r.Context()))
 }
 
 func (a *App) apiPresence(w http.ResponseWriter, r *http.Request) {
@@ -256,6 +257,10 @@ func (a *App) apiRandom(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) apiLeaderboard(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, a.Gallery.Leaderboard(r.Context(), 20))
+}
+
+func (a *App) apiGalleryHealth(w http.ResponseWriter, r *http.Request) {
+	writeJSON(w, http.StatusOK, a.Gallery.Health(r.Context()))
 }
 
 func (a *App) apiPKPair(w http.ResponseWriter, r *http.Request) {
@@ -380,6 +385,12 @@ func (a *App) render(w http.ResponseWriter, r *http.Request, tmpl string, data P
 	if err := a.templates.ExecuteTemplate(w, tmpl, data); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+}
+
+func (a *App) statsSnapshot(ctx context.Context) stats.Snapshot {
+	snapshot := a.Stats.Snapshot(ctx)
+	snapshot.WorksTotal = a.Gallery.Count(ctx)
+	return snapshot
 }
 
 func (a *App) diagnosticText(locale string, d model.Diagnostic, suffix string) string {

@@ -33,6 +33,7 @@ func main() {
 	}
 	defer galleryStore.Close()
 	_ = galleryStore.Sync(ctx)
+	_ = galleryStore.SeedDefaultsIfEmpty(ctx)
 	go galleryStore.SyncEvery(ctx, time.Hour)
 
 	app := &handler.App{
