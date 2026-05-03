@@ -64,6 +64,22 @@ Copy `.env.example` to `.env` and set:
 - `stats:cache:misses`
 - `rl:s:{session}` and `rl:ip:{hash}`: short-lived rate limits.
 
+## Gallery Maintenance
+
+Gallery works are persisted in SQLite at `SQLITE_PATH` and hydrated back into Redis when the app starts. The app also syncs Redis gallery state into SQLite at startup and once per hour.
+
+Run maintenance commands inside the app container:
+
+```bash
+docker compose exec app /app/opengraphy gallery-health
+docker compose exec app /app/opengraphy gallery-sync
+docker compose exec app /app/opengraphy gallery-seed
+```
+
+- `gallery-health` prints Redis recent count, SQLite works count, and the total used by stats.
+- `gallery-sync` writes works still present in Redis into SQLite immediately.
+- `gallery-seed` inserts the built-in showcase previews only when both Redis and SQLite are empty.
+
 ## Privacy Design
 
 - Submitted metadata check results are cached for 4 hours.

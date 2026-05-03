@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -21,6 +23,11 @@ import (
 
 func main() {
 	cfg := config.Load()
+	if len(os.Args) > 1 {
+		runCLI(cfg, os.Args[1])
+		return
+	}
+
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
@@ -63,4 +70,43 @@ func main() {
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	_ = server.Shutdown(shutdownCtx)
+}
+
+func runCLI(cfg config.Config, command string) {
+	ctx := context.Background()
+	redisCache := cache.NewRedis(cfg.RedisAddr, cfg.RedisPassword, cfg.RedisDB, cfg.CacheTTL)
+	defer redisCache.Close()
+
+	galleryStore, err := gallery.NewStore(cfg.SQLitePath, redisCache.Client(), cfg.GalleryTTL)
+	if err != nil {
+		log.Fatalf("gallery store: %v", err)
+	}
+	defer galleryStore.Close()
+
+	switch command {
+	case "gallery-health":
+		writeJSON(galleryStore.Health(ctx))
+	case "gallery-sync":
+		if err := galleryStore.Sync(ctx); err != nil {
+			log.Fatalf("gallery sync: %v", err)
+		}
+		writeJSON(galleryStore.Health(ctx))
+	case "gallery-seed":
+		if err := galleryStore.SeedDefaultsIfEmpty(ctx); err != nil {
+			log.Fatalf("gallery seed: %v", err)
+		}
+		writeJSON(galleryStore.Health(ctx))
+	default:
+		fmt.Fprintf(os.Stderr, "unknown command %q\n", command)
+		fmt.Fprintln(os.Stderr, "available commands: gallery-health, gallery-sync, gallery-seed")
+		os.Exit(2)
+	}
+}
+
+func writeJSON(v any) {
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "  ")
+	if err := enc.Encode(v); err != nil {
+		log.Fatalf("json: %v", err)
+	}
 }
