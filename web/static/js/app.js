@@ -53,6 +53,14 @@ if (langForm) {
   });
 }
 
+document.addEventListener('error', (event) => {
+  const img = event.target;
+  if (!(img instanceof HTMLImageElement)) return;
+  if (!img.closest('.work-card, .pk-card, .leader-row, .social-card')) return;
+  img.classList.add('image-fallback');
+  img.removeAttribute('src');
+}, true);
+
 function renderPKCard(button, work, side) {
   button.dataset.id = work.id;
   const visitURL = work.final_url || work.url || '';
