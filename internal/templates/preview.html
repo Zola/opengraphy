@@ -54,7 +54,7 @@
         <h2>{{call .T "diagnostics"}}</h2>
         <div class="diag-list">
           {{range .Result.Diagnostics}}
-            <article class="{{.Severity}}"><strong>{{.Field}}</strong><p>{{.Message}}</p><small>{{.Fix}}</small></article>
+            <article class="{{.Severity}}"><strong>{{.Field}}</strong><p>{{call $.DiagMessage .}}</p><small>{{call $.DiagFix .}}</small></article>
           {{else}}
             <article class="pass"><strong>{{call .T "all_good_title"}}</strong><p>{{call .T "all_good_body"}}</p></article>
           {{end}}

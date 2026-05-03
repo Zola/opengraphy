@@ -52,6 +52,8 @@ type PageData struct {
 	Locales       []string
 	LocaleLabels  map[string]string
 	T             func(string) string
+	DiagMessage   func(model.Diagnostic) string
+	DiagFix       func(model.Diagnostic) string
 	URL           string
 	Result        model.CheckResult
 	Stats         stats.Snapshot
@@ -335,6 +337,8 @@ func (a *App) render(w http.ResponseWriter, r *http.Request, tmpl string, data P
 	data.Locales = a.I18n.Locales()
 	data.LocaleLabels = a.I18n.LocaleLabels()
 	data.T = func(key string) string { return a.I18n.T(locale, key) }
+	data.DiagMessage = func(d model.Diagnostic) string { return a.diagnosticText(locale, d, "message") }
+	data.DiagFix = func(d model.Diagnostic) string { return a.diagnosticText(locale, d, "fix") }
 	if data.Description == "" {
 		data.Description = a.I18n.T(locale, "meta_description")
 	}
@@ -362,6 +366,24 @@ func (a *App) render(w http.ResponseWriter, r *http.Request, tmpl string, data P
 	if err := a.templates.ExecuteTemplate(w, tmpl, data); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+}
+
+func (a *App) diagnosticText(locale string, d model.Diagnostic, suffix string) string {
+	if d.Code == "" {
+		if suffix == "fix" {
+			return d.Fix
+		}
+		return d.Message
+	}
+	key := "diag_" + d.Code + "_" + suffix
+	value := a.I18n.T(locale, key)
+	if value == key {
+		if suffix == "fix" {
+			return d.Fix
+		}
+		return d.Message
+	}
+	return value
 }
 
 func (a *App) absoluteURL(base, path string) string {

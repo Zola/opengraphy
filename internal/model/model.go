@@ -78,6 +78,7 @@ type ImageInfo struct {
 
 type Diagnostic struct {
 	Severity string `json:"severity"`
+	Code     string `json:"code"`
 	Field    string `json:"field"`
 	Message  string `json:"message"`
 	Fix      string `json:"fix"`

@@ -13,13 +13,21 @@ func TestBuildDiagnosticsMissingCoreTags(t *testing.T) {
 		t.Fatalf("score should be low, got %d", score)
 	}
 	var fields []string
+	var codes []string
 	for _, item := range items {
 		fields = append(fields, item.Field)
+		codes = append(codes, item.Code)
 	}
 	joined := strings.Join(fields, ",")
 	for _, want := range []string{"og:title", "og:description", "og:image"} {
 		if !strings.Contains(joined, want) {
 			t.Fatalf("missing diagnostic %s in %s", want, joined)
+		}
+	}
+	joinedCodes := strings.Join(codes, ",")
+	for _, want := range []string{"missing_title", "missing_description", "missing_image"} {
+		if !strings.Contains(joinedCodes, want) {
+			t.Fatalf("missing diagnostic code %s in %s", want, joinedCodes)
 		}
 	}
 }

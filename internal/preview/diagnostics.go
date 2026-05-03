@@ -10,50 +10,50 @@ import (
 func Build(meta model.Metadata, image model.ImageInfo, fetch model.FetchInfo, finalURL string) (int, []model.Diagnostic, string) {
 	var items []model.Diagnostic
 	score := 100
-	add := func(sev, field, msg, fix, snippet string, penalty int) {
-		items = append(items, model.Diagnostic{Severity: sev, Field: field, Message: msg, Fix: fix, Snippet: snippet})
+	add := func(sev, code, field, msg, fix, snippet string, penalty int) {
+		items = append(items, model.Diagnostic{Severity: sev, Code: code, Field: field, Message: msg, Fix: fix, Snippet: snippet})
 		score -= penalty
 	}
 
 	preview := meta.Preview(finalURL)
 	if fetch.Status < 200 || fetch.Status >= 400 {
-		add("error", "http", fmt.Sprintf("HTTP status is %d.", fetch.Status), "Make sure the page returns 200 OK for crawlers.", "", 20)
+		add("error", "http_status", "http", fmt.Sprintf("HTTP status is %d.", fetch.Status), "Make sure the page returns 200 OK for crawlers.", "", 20)
 	}
 	if fetch.Redirects > 3 {
-		add("warning", "redirects", "Redirect chain is long.", "Keep social crawler redirects short and stable.", "", 8)
+		add("warning", "redirect_chain_long", "redirects", "Redirect chain is long.", "Keep social crawler redirects short and stable.", "", 8)
 	}
 	if !strings.Contains(strings.ToLower(fetch.ContentType), "html") {
-		add("warning", "content-type", "Content type is not clearly HTML.", "Serve text/html for pages that need social previews.", "", 8)
+		add("warning", "content_type_not_html", "content-type", "Content type is not clearly HTML.", "Serve text/html for pages that need social previews.", "", 8)
 	}
 	if preview.Title == "" {
-		add("error", "og:title", "Missing title for social previews.", "Add og:title and a regular title tag.", `<meta property="og:title" content="Your page title">`, 16)
+		add("error", "missing_title", "og:title", "Missing title for social previews.", "Add og:title and a regular title tag.", `<meta property="og:title" content="Your page title">`, 16)
 	} else if l := len([]rune(preview.Title)); l > 70 {
-		add("warning", "title", "Title may be too long.", "Aim for about 40-60 characters.", "", 5)
+		add("warning", "title_too_long", "title", "Title may be too long.", "Aim for about 40-60 characters.", "", 5)
 	} else if l < 12 {
-		add("info", "title", "Title is very short.", "Use a descriptive title that still scans quickly.", "", 2)
+		add("info", "title_too_short", "title", "Title is very short.", "Use a descriptive title that still scans quickly.", "", 2)
 	}
 	if preview.Description == "" {
-		add("error", "og:description", "Missing description for social previews.", "Add og:description and meta description.", `<meta property="og:description" content="A useful one or two sentence summary.">`, 16)
+		add("error", "missing_description", "og:description", "Missing description for social previews.", "Add og:description and meta description.", `<meta property="og:description" content="A useful one or two sentence summary.">`, 16)
 	} else if l := len([]rune(preview.Description)); l > 180 {
-		add("warning", "description", "Description may be too long.", "Aim for about 120-160 characters.", "", 5)
+		add("warning", "description_too_long", "description", "Description may be too long.", "Aim for about 120-160 characters.", "", 5)
 	}
 	if preview.Image == "" {
-		add("error", "og:image", "Missing preview image.", "Add an absolute HTTPS og:image URL.", `<meta property="og:image" content="https://example.com/preview.png">`, 20)
+		add("error", "missing_image", "og:image", "Missing preview image.", "Add an absolute HTTPS og:image URL.", `<meta property="og:image" content="https://example.com/preview.png">`, 20)
 	} else {
 		if !strings.HasPrefix(preview.Image, "https://") {
-			add("warning", "og:image", "Image URL is not HTTPS.", "Use HTTPS image URLs for better crawler compatibility.", "", 5)
+			add("warning", "image_not_https", "og:image", "Image URL is not HTTPS.", "Use HTTPS image URLs for better crawler compatibility.", "", 5)
 		}
 		if !image.Reachable {
-			add("error", "og:image", "Preview image could not be fetched.", "Check image status, redirects, robots, and content type.", "", 16)
+			add("error", "image_unreachable", "og:image", "Preview image could not be fetched.", "Check image status, redirects, robots, and content type.", "", 16)
 		}
 		if image.Width > 0 && image.Height > 0 {
 			if image.Width < 1200 || image.Height < 627 {
-				add("warning", "og:image", "Preview image is smaller than recommended.", "Use 1200x630 or a 1.91:1 image for broad compatibility.", "", 8)
+				add("warning", "image_too_small", "og:image", "Preview image is smaller than recommended.", "Use 1200x630 or a 1.91:1 image for broad compatibility.", "", 8)
 			}
 		}
 	}
 	if meta.Twitter.Card == "" {
-		add("info", "twitter:card", "Twitter/X card type is missing.", "Add twitter:card=summary_large_image for larger cards.", `<meta name="twitter:card" content="summary_large_image">`, 3)
+		add("info", "missing_twitter_card", "twitter:card", "Twitter/X card type is missing.", "Add twitter:card=summary_large_image for larger cards.", `<meta name="twitter:card" content="summary_large_image">`, 3)
 	}
 	if score < 0 {
 		score = 0
