@@ -4,30 +4,30 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{.Title}}</title>
-  <meta name="description" content="OpenGraphy 是免費的 Open Graph、Twitter Card 與社群分享預覽檢測工具，提供 metadata 解析、平台預覽、診斷報告與修復建議。">
-  <link rel="stylesheet" href="/static/css/app.css?v=20260503-4">
-  <script defer src="/static/js/app.js?v=20260503-4"></script>
+  <meta name="description" content='{{call .T "meta_description"}}'>
+  <link rel="stylesheet" href="/static/css/app.css?v=20260503-6">
+  <script defer src="/static/js/app.js?v=20260503-6"></script>
 </head>
 <body>
   <header class="topbar">
     <a class="brand" href="/"><span class="brand-mark"></span>{{call .T "brand"}}</a>
-    <nav><a href="/">首頁</a><a href="/gallery">作品牆</a><a href="/privacy">隱私政策</a></nav>
+    <nav><a href="/">{{call .T "home"}}</a><a href="/gallery">{{call .T "gallery"}}</a><a href="/privacy">{{call .T "privacy"}}</a></nav>
   </header>
 
   <main>
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">Open Graph / Twitter Card / 社群預覽檢測</p>
-        <h1>一站式生成、檢測與預覽 Open Graph Meta Tags</h1>
-        <p class="lead">輸入網址，OpenGraphy 會從伺服器端抓取網頁原始 HTML，解析 Open Graph 與 Twitter Card metadata，展示各平台分享卡片，並給出可執行的修復建議。</p>
+        <p class="eyebrow">{{call .T "hero_eyebrow"}}</p>
+        <h1>{{call .T "hero_title_full"}}</h1>
+        <p class="lead">{{call .T "hero_subtitle_full"}}</p>
         <form class="check-form" action="/check" method="post">
-          <input name="url" type="url" required placeholder='輸入要檢測的網址，例如 https://example.com'>
-          <button type="submit">檢測預覽</button>
+          <input name="url" type="url" required placeholder='{{call .T "url_placeholder_full"}}'>
+          <button type="submit">{{call .T "check"}}</button>
         </form>
         <div class="stats-row" data-stats>
-          <span><strong data-online>{{.Stats.Online}}</strong> 人在線</span>
-          <span><strong data-visits>{{.Stats.VisitsTotal}}</strong> 次訪問</span>
-          <span><strong data-checks>{{.Stats.ChecksTotal}}</strong> 次檢測</span>
+          <span><strong data-online>{{.Stats.Online}}</strong> {{call .T "stats_online_full"}}</span>
+          <span><strong data-visits>{{.Stats.VisitsTotal}}</strong> {{call .T "stats_visits_full"}}</span>
+          <span><strong data-checks>{{.Stats.ChecksTotal}}</strong> {{call .T "stats_checks_full"}}</span>
         </div>
       </div>
       <div class="hero-panel">
@@ -35,15 +35,15 @@
           <div class="browser-bar"><span></span><span></span><span></span></div>
           <div class="mock-preview">
             <div class="mock-image"></div>
-            <div><strong>acme.example</strong><h3>發布前就確認分享預覽</h3><p>讓客戶在 Facebook、LinkedIn、Slack 或訊息 App 裡看到一致、清楚、有吸引力的連結卡片。</p></div>
+            <div><strong>acme.example</strong><h3>{{call .T "mock_title"}}</h3><p>{{call .T "mock_body"}}</p></div>
           </div>
-          <div class="mini-report"><b>92</b><span>預覽分數</span><em>7 項檢查通過</em></div>
+          <div class="mini-report"><b>92</b><span>{{call .T "preview_score"}}</span><em>7 {{call .T "checks_passed"}}</em></div>
         </div>
       </div>
     </section>
 
     <section class="band">
-      <h2>支援連結真正會被分享出去的平台</h2>
+      <h2>{{call .T "platforms_title"}}</h2>
       <div class="platform-grid">
         <article>Facebook</article><article>X / Twitter</article><article>LinkedIn</article><article>Slack</article>
         <article>Discord</article><article>WhatsApp</article><article>Telegram</article><article>Pinterest</article>
@@ -52,41 +52,41 @@
 
     <section class="split-section">
       <div>
-        <h2>安全抓取、準確解析、可信預覽</h2>
-        <p>OpenGraphy 不在使用者瀏覽器裡抓取目標網站，而是由後端模擬 crawler 行為：檢查 DNS 與重定向、阻擋私有網段、解析初始 HTML、驗證圖片是否可訪問，最後把結果整理成診斷報告與修復建議。</p>
+        <h2>{{call .T "secure_title"}}</h2>
+        <p>{{call .T "secure_body"}}</p>
       </div>
       <div class="feature-list">
-        <p><b>SSRF 防護</b><span>每次抓取都檢查 DNS、IP 範圍與每一步重定向，避免訪問 localhost、內網與保留位址。</span></p>
-        <p><b>4 小時快取</b><span>metadata 與預覽結果暫存在 Redis，不長期保存 URL 歷史，也不保存使用者個資。</span></p>
-        <p><b>診斷建議</b><span>檢查缺失標籤、相對圖片 URL、圖片尺寸、HTTP 狀態、標題長度與描述長度。</span></p>
+        <p><b>{{call .T "feature_ssrf_title"}}</b><span>{{call .T "feature_ssrf_body"}}</span></p>
+        <p><b>{{call .T "feature_cache_title"}}</b><span>{{call .T "feature_cache_body"}}</span></p>
+        <p><b>{{call .T "feature_diag_title"}}</b><span>{{call .T "feature_diag_body"}}</span></p>
       </div>
     </section>
 
     <section class="knowledge-section">
       <div class="section-head stacked">
-        <h2>用 Open Graph 讓每一次分享都像精心設計的廣告位</h2>
-        <p>Open Graph 是社群平台、即時通訊軟體和內容工具讀取網頁預覽的共同語言。只要在 HTML 的 <code>&lt;head&gt;</code> 裡放對標籤，你就能控制分享卡片的標題、描述、圖片、網址和內容類型，避免平台隨機抓錯圖、截斷標題，或只顯示一條冷冰冰的連結。</p>
+        <h2>{{call .T "knowledge_title"}}</h2>
+        <p>{{call .T "knowledge_body"}}</p>
       </div>
       <div class="article-grid">
         <article>
-          <h3>Open Graph 是什麼？</h3>
-          <p>OG 標籤是一組給 crawler 看的 metadata。Facebook、LinkedIn、Slack、Discord、WhatsApp、Telegram、X 等平台在產生連結預覽時，通常會先讀取 <code>og:title</code>、<code>og:description</code> 和 <code>og:image</code>。它不直接提升搜尋排名，但更漂亮、更一致的分享預覽會提高點擊率、轉發率和品牌可信度。</p>
+          <h3>{{call .T "what_og_title"}}</h3>
+          <p>{{call .T "what_og_body"}}</p>
         </article>
         <article>
-          <h3>建議圖片尺寸</h3>
-          <p>最穩妥的預覽圖尺寸是 <strong>1200 x 630</strong>，比例約為 <strong>1.91:1</strong>。這個尺寸能覆蓋 Facebook、LinkedIn、X large card、Slack 和 Discord 等常見場景。圖片請盡量壓到 1 MB 以內，WhatsApp、iMessage 這類通訊工具對圖片大小更敏感。</p>
+          <h3>{{call .T "image_size_title"}}</h3>
+          <p>{{call .T "image_size_body"}}</p>
         </article>
         <article>
-          <h3>為什麼要從後端抓取？</h3>
-          <p>大多數平台 crawler 不會執行瀏覽器裡的 JavaScript，也不會幫你等待 SPA 完成渲染。OpenGraphy 從伺服器端抓取原始 HTML，模擬 crawler 的行為，並檢查重定向、HTTP 狀態、圖片可訪問性和常見安全風險。</p>
+          <h3>{{call .T "backend_fetch_title"}}</h3>
+          <p>{{call .T "backend_fetch_body"}}</p>
         </article>
       </div>
     </section>
 
     <section class="og-spec-section">
       <div>
-        <h2>最小可用的 Open Graph 標籤</h2>
-        <p class="muted">如果你只能先做一件事，請先把標題、描述、圖片和 canonical URL 補齊。這幾個標籤能消除大部分「預覽圖錯了」和「分享卡片不好看」的問題。</p>
+        <h2>{{call .T "minimal_tags_title"}}</h2>
+        <p class="muted">{{call .T "minimal_tags_body"}}</p>
       </div>
       <pre class="snippet"><code>&lt;meta property="og:title" content="你的頁面標題" /&gt;
 &lt;meta property="og:description" content="一段清楚、有吸引力的頁面摘要。" /&gt;
@@ -100,7 +100,7 @@
     </section>
 
     <section class="platform-notes">
-      <h2>不同平台會用不同規則解讀同一組 metadata</h2>
+      <h2>{{call .T "platform_rules_title"}}</h2>
       <div class="note-grid">
         <article><h3>Facebook</h3><p>重視 <code>og:title</code>、<code>og:description</code> 和 <code>og:image</code>。修改後可能需要用 Sharing Debugger 觸發重新抓取。</p></article>
         <article><h3>X / Twitter</h3><p>可以回退讀取 OG，但建議另外加 <code>twitter:card</code> 和 <code>twitter:image</code>，才能穩定顯示大圖卡片。</p></article>
@@ -112,7 +112,7 @@
     </section>
 
     <section class="framework-section">
-      <h2>常見技術棧如何接入</h2>
+      <h2>{{call .T "framework_title"}}</h2>
       <div class="framework-grid">
         <article><h3>Next.js / Nuxt / Astro</h3><p>優先使用框架提供的 metadata API 或 SSR/SSG，在伺服器輸出的 HTML 裡直接生成 OG 標籤。</p></article>
         <article><h3>WordPress</h3><p>可以使用 SEO 外掛，也可以在 theme 的 head hook 裡輸出文章標題、摘要、特色圖片和永久連結。</p></article>
@@ -121,7 +121,7 @@
     </section>
 
     <section class="faq-section">
-      <h2>常見問題</h2>
+      <h2>{{call .T "faq_title"}}</h2>
       <div class="faq-list">
         <article><h3>Open Graph 會直接影響 SEO 排名嗎？</h3><p>它通常不是直接排名因子，但能提升社群點擊率和分享品質，間接帶來更多流量、引用和品牌曝光。</p></article>
         <article><h3>為什麼換圖後平台還顯示舊圖片？</h3><p>平台會快取抓取結果。請使用 Facebook Sharing Debugger、LinkedIn Post Inspector 等工具強制重新抓取，必要時也可以替圖片 URL 加版本參數。</p></article>
@@ -131,9 +131,9 @@
     </section>
 
     <section class="gallery-teaser">
-      <div class="section-head"><h2>最新合格作品</h2><a href="/gallery">查看作品牆</a></div>
+      <div class="section-head"><h2>{{call .T "recent_title"}}</h2><a href="/gallery">{{call .T "gallery"}}</a></div>
       <div class="work-grid small">
-        {{range .Recent}}{{template "work-card" .}}{{else}}<p class="muted">完成檢測並符合展示條件的網站預覽，會出現在這裡。</p>{{end}}
+        {{range .Recent}}{{template "work-card" .}}{{else}}<p class="muted">{{call .T "gallery_empty"}}</p>{{end}}
       </div>
     </section>
   </main>

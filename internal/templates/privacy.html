@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="{{.Locale}}">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{.Title}}</title><link rel="stylesheet" href="/static/css/app.css?v=20260503-2"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{.Title}}</title><link rel="stylesheet" href="/static/css/app.css?v=20260503-6"></head>
 <body>
   <header class="topbar"><a class="brand" href="/"><span class="brand-mark"></span>{{call .T "brand"}}</a><nav><a href="/">{{call .T "home"}}</a><a href="/gallery">{{call .T "gallery"}}</a></nav></header>
-  <main class="legal"><h1>Privacy Policy</h1><p>OpenGraphy does not sell data and does not use advertising cookies. Submitted URLs are fetched to produce metadata diagnostics and cached in Redis for up to 4 hours. Qualified public website previews may appear in the gallery as public examples.</p><p>Presence uses an anonymous random session cookie. Rate limiting uses salted short-lived hashes and does not store plain IP addresses.</p></main>
+  <main class="legal"><h1>{{call .T "privacy_title"}}</h1><p>{{call .T "privacy_body_1"}}</p><p>{{call .T "privacy_body_2"}}</p></main>
   {{template "footer" .}}
 </body></html>

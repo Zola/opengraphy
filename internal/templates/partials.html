@@ -15,16 +15,16 @@
 
 {{define "footer"}}
 <footer class="site-footer">
-  <div><b>{{call .T "brand"}}</b><p>安全的 Open Graph 診斷、社群預覽測試與 metadata 修復建議。</p></div>
-  <form data-lang-form><label>語言 <select name="lang">{{range .Locales}}<option value="{{.}}" {{if eq $.Locale .}}selected{{end}}>{{.}}</option>{{end}}</select></label></form>
-  <nav><a href="/privacy">隱私政策</a><a href="/terms">服務條款</a><a href="https://developers.facebook.com/tools/debug/" rel="noopener" target="_blank">Facebook 官方除錯工具</a><a href="https://www.linkedin.com/post-inspector/" rel="noopener" target="_blank">LinkedIn Post Inspector</a></nav>
+  <div><b>{{call .T "brand"}}</b><p>{{call .T "footer_body"}}</p></div>
+  <form data-lang-form><label>{{call .T "language_label"}} <select name="lang">{{range .Locales}}<option value="{{.}}" {{if eq $.Locale .}}selected{{end}}>{{index $.LocaleLabels .}}</option>{{end}}</select></label></form>
+  <nav><a href="/privacy">{{call .T "privacy"}}</a><a href="/terms">{{call .T "terms"}}</a><a href="https://developers.facebook.com/tools/debug/" rel="noopener" target="_blank">{{call .T "facebook_debugger"}}</a><a href="https://www.linkedin.com/post-inspector/" rel="noopener" target="_blank">{{call .T "linkedin_inspector"}}</a></nav>
 </footer>
 {{end}}
 
 {{define "consent"}}
 <div class="consent" data-consent hidden>
-  <p>我們只使用語言偏好、同意狀態與匿名在線人數所需的必要 cookie，不使用追蹤 cookie 或廣告 cookie。</p>
-  <button data-consent-accept>接受</button>
-  <button data-consent-reject>僅必要</button>
+  <p>{{call .T "consent_full"}}</p>
+  <button data-consent-accept>{{call .T "accept"}}</button>
+  <button data-consent-reject>{{call .T "reject_necessary"}}</button>
 </div>
 {{end}}

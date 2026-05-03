@@ -41,18 +41,19 @@ type App struct {
 }
 
 type PageData struct {
-	Template    string
-	Title       string
-	Locale      string
-	Locales     []string
-	T           func(string) string
-	URL         string
-	Result      model.CheckResult
-	Stats       stats.Snapshot
-	Recent      []model.Work
-	Random      []model.Work
-	Leaderboard []model.Work
-	Error       string
+	Template     string
+	Title        string
+	Locale       string
+	Locales      []string
+	LocaleLabels map[string]string
+	T            func(string) string
+	URL          string
+	Result       model.CheckResult
+	Stats        stats.Snapshot
+	Recent       []model.Work
+	Random       []model.Work
+	Leaderboard  []model.Work
+	Error        string
 }
 
 func (a *App) Routes() http.Handler {
@@ -286,6 +287,7 @@ func (a *App) render(w http.ResponseWriter, r *http.Request, tmpl string, data P
 	data.Template = tmpl
 	data.Locale = locale
 	data.Locales = a.I18n.Locales()
+	data.LocaleLabels = a.I18n.LocaleLabels()
 	data.T = func(key string) string { return a.I18n.T(locale, key) }
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	if err := a.templates.ExecuteTemplate(w, tmpl, data); err != nil {

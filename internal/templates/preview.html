@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{.Title}}</title>
-  <link rel="stylesheet" href="/static/css/app.css?v=20260503-2">
-  <script defer src="/static/js/app.js?v=20260503-2"></script>
+  <link rel="stylesheet" href="/static/css/app.css?v=20260503-6">
+  <script defer src="/static/js/app.js?v=20260503-6"></script>
 </head>
 <body>
   <header class="topbar">
@@ -23,10 +23,10 @@
       <section class="error-box">{{.Error}}</section>
     {{else}}
       <section class="score-strip">
-        <div><b>{{.Result.Score}}</b><span>score</span></div>
+        <div><b>{{.Result.Score}}</b><span>{{call .T "score_label"}}</span></div>
         <div><b>{{.Result.Fetch.Status}}</b><span>HTTP</span></div>
-        <div><b>{{.Result.Fetch.DurationMS}}ms</b><span>fetch</span></div>
-        <div><b>{{if .Result.Cache.Hit}}cached{{else}}fresh{{end}}</b><span>source</span></div>
+        <div><b>{{.Result.Fetch.DurationMS}}ms</b><span>{{call .T "fetch_label"}}</span></div>
+        <div><b>{{if .Result.Cache.Hit}}{{call .T "cached"}}{{else}}{{call .T "fresh"}}{{end}}</b><span>{{call .T "source_label"}}</span></div>
       </section>
 
       <section class="preview-grid">
@@ -41,13 +41,13 @@
       <section class="panel-two">
         <div class="meta-editor">
           <h2>{{call .T "metadata"}}</h2>
-          <label>Title<input value="{{.Result.Preview.Title}}"></label>
-          <label>Description<textarea>{{.Result.Preview.Description}}</textarea></label>
-          <label>Image<input value="{{.Result.Preview.Image}}"></label>
-          <label>Final URL<input value="{{.Result.FinalURL}}"></label>
+          <label>{{call .T "title_label"}}<input value="{{.Result.Preview.Title}}"></label>
+          <label>{{call .T "description_label"}}<textarea>{{.Result.Preview.Description}}</textarea></label>
+          <label>{{call .T "image_label"}}<input value="{{.Result.Preview.Image}}"></label>
+          <label>{{call .T "final_url_label"}}<input value="{{.Result.FinalURL}}"></label>
         </div>
         <div class="code-box">
-          <h2>{{call .T "code"}} <button type="button" data-copy="#generated-code">Copy</button></h2>
+          <h2>{{call .T "code"}} <button type="button" data-copy="#generated-code">{{call .T "copy"}}</button></h2>
           <pre id="generated-code"><code>{{.Result.Generated}}</code></pre>
         </div>
       </section>
@@ -58,7 +58,7 @@
           {{range .Result.Diagnostics}}
             <article class="{{.Severity}}"><strong>{{.Field}}</strong><p>{{.Message}}</p><small>{{.Fix}}</small></article>
           {{else}}
-            <article class="pass"><strong>All good</strong><p>No major metadata problems detected.</p></article>
+            <article class="pass"><strong>{{call .T "all_good_title"}}</strong><p>{{call .T "all_good_body"}}</p></article>
           {{end}}
         </div>
       </section>
